@@ -15,7 +15,7 @@ class Nfc():
         self.previousTime = None
         self.thread = None
         self.run = True
-        self.i2c = Pn532I2c(1)
+        self.i2c = Pn532I2c(0)
         self.nfc = Pn532(self.i2c)
         self.nfc.begin()
         
