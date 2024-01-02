@@ -15,7 +15,7 @@ class Nfc():
         self.previousTime = None
         self.thread = None
         self.run = True
-        self.i2c = Pn532I2c(0)
+        self.i2c = Pn532I2c(1)
         self.nfc = Pn532(self.i2c)
         self.nfc.begin()
         
@@ -44,9 +44,9 @@ class Nfc():
                 time.sleep(.5)
                 continue
             
-            # If we already encountered this ID within 3 seconds, sleep and re-run the loop.
+            # If we already encountered this ID within 1 seconds, sleep, refresh the current time and re-run the loop.
             # This is done in case the NFC tag is held in range for a longer period.
-            if (idm == self.previousId and (time.time() - self.previousTime) < 3):
+            if (idm == self.previousId and (time.time() - self.previousTime) < 1):
                 #Refresh the time when the card was encountered last.
                 self.previousTime = time.time()
                 time.sleep(.5)
@@ -84,11 +84,14 @@ class Nfc():
         # FeliCa_card_read.py
         serviceCodeList = [0x000B]
         blockList = [0x8000, 0x8001, 0x8002]
+        #Requests the NFC reader to read in values.
         ret, blocks = self.nfc.felica_ReadWithoutEncryption(serviceCodeList, blockList)
+        #If the value is anything other than -1, the read was unsuccessful.
         if (ret != 1):
             print("error")
             return
         
-        #Enumerate returns the index and the value.
-        for i, blockData in enumerate(blocks):
-            print(f"  Block No. {i} : {hex(int.from_bytes(blockData))}")
+        uuid = hex(int.from_bytes(blocks))
+        #If successful, print the data stored on the NFC Tag.
+        print(f"  BlockData: {uuid}")
+        self.read_callback(uuid)
