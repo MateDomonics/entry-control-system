@@ -14,10 +14,10 @@ def callback(uuid: str) -> None:
     print(f"Server Response: {response.json()}")
 
 if __name__ == "__main__":
-    callback("test")
-    time.sleep(2)
-    callback("test")
-    exit(0)
+    # callback("test")
+    # time.sleep(2)
+    # callback("test")
+    # exit(0)
     nfc_reader = Nfc(callback)
     nfc_reader.start()
     input("Press RETURN to stop.")
