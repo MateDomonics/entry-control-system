@@ -19,7 +19,12 @@ class Nfc():
         self.nfc = Pn532(self.i2c)
         self.nfc.begin()
         
-        versiondata = self.nfc.getFirmwareVersion()
+        try:
+            versiondata = self.nfc.getFirmwareVersion()
+        except:
+            #This usually fails the first time, retry
+            versiondata = self.nfc.getFirmwareVersion()
+        
         if versiondata == 0:
             print("Didn't find PN53x board")
             raise RuntimeError("Didn't find PN53x board")
