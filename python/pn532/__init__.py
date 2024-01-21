@@ -1,0 +1,1 @@
+from .i2c import PN532_I2C

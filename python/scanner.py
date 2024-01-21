@@ -1,5 +1,5 @@
 from typing import Callable
-from pn532pi import Pn532I2c, Pn532
+from .pn532 import PN532_I2C
 import time
 from threading import Thread
 
@@ -15,8 +15,9 @@ class Nfc():
         self.previousTime = None
         self.thread = None
         self.run = True
-        self.i2c = Pn532I2c(1)
-        self.nfc = Pn532(self.i2c)
+        # self.i2c = Pn532I2c(1)
+        # self.nfc = Pn532(self.i2c)
+        self.nfc = PN532_I2C(debug = False, reset = 20, req = 16)
         self.nfc.begin()
         
         try:
