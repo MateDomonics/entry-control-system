@@ -19,22 +19,17 @@ class Nfc():
         # self.nfc = Pn532(self.i2c)
         self.nfc = PN532_I2C(debug = True, reset = 20, req = 16)
         #self.nfc.begin()
+
+        versiondata = self.nfc.get_firmware_version()
         
-        try:
-            versiondata = self.nfc.get_firmware_version()
-        except:
-            #This usually fails the first time, retry
-            versiondata = self.nfc.get_firmware_version()
-        
-        if versiondata == 0:
-            print("Didn't find PN53x board")
-            raise RuntimeError("Didn't find PN53x board")
         # print("Found chip PN5 {:#x} Firmware ver. {:d}.{:d}".format((versiondata >> 24) & 0xFF, (versiondata >> 16) & 0xFF,
         #                                                             (versiondata >> 8) & 0xFF))
-        print(versiondata)
+        print(f"Current version of the PN532 board: {versiondata[1]}.{versiondata[2]}.{versiondata[3]}")
+        # Checksum, major, minor, tertiary
+        # (50, 1, 6, 7)
         
-        self.nfc.setPassiveActivationRetries(0xFF)
-        self.nfc.SAMConfig()
+        # self.nfc.setPassiveActivationRetries(0xFF)
+        # self.nfc.SAMConfig()
 
     #Private method so that it shouldn't be accessed by users.
     def __loop(self) -> None:
