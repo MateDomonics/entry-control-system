@@ -39,14 +39,14 @@ class Nfc():
                 uid = self.nfc.read_passive_target(timeout=10)
                 if uid is None:
                     continue
-                print(f"Card UID: {uid}")
+                print(f"Card UID: {[hex(i) for i in uid]}")
                 
                 # If we already encountered this ID within 1 seconds, sleep, refresh the current time and re-run the loop.
                 # This is done in case the NFC tag is held in range for a longer period.
                 if (uid == self.previousId and (self.previousTime is None or (time.time() - self.previousTime) < 1)):
                     #Refresh the time when the card was encountered last.
                     self.previousTime = time.time()
-                    time.sleep(.5)
+                    time.sleep(1)
                     continue
 
                 self.previousTime = time.time() #time.time gets the current time
