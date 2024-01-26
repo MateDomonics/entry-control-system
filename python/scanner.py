@@ -48,6 +48,7 @@ class Nfc():
                     time.sleep(1)
                     continue
 
+                print("Found a card!")
                 print(f"Card UID: {[hex(i) for i in uid]}")
 
                 self.previousTime = time.time() #time.time gets the current time
@@ -78,12 +79,11 @@ class Nfc():
     def read_data(self):
         try:
             data = self.nfc.mifare_classic_read_block(block_number=1)
-            if data == None:
-                print("Read error!")
-                time.sleep(1)
-                return
-            
-            print("Found a card!")
             print(f"Data from card: \n{[hex(i) for i in data]}")
         except:
             print("Read Exception.")
+            self.nfc.mifare_classic_write_block(block_number=1, data=bytes("AAAABBBBCCCCDDDD", encoding="utf-8"))
+            time.sleep(1)
+
+            data = self.nfc.mifare_classic_read_block(block_number=1)
+            print(f"Data from card: \n{[hex(i) for i in data]}")
