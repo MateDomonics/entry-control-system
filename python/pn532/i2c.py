@@ -24,6 +24,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+# Source: https://github.com/soonuse/pn532-nfc-hat/blob/master/pn532/i2c.py
+
 """
 This module will let you communicate with a PN532 RFID/NFC chip
 using I2C on the Raspberry Pi.

@@ -1,5 +1,5 @@
 from typing import Callable
-from .pn532 import PN532_I2C
+from pn532 import PN532_I2C
 import time
 from threading import Thread
 

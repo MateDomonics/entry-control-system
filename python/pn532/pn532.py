@@ -24,6 +24,9 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+
+# Source: https://github.com/soonuse/pn532-nfc-hat/blob/master/pn532/pn532.py
+
 """
 ``pn532-nfc-hat``
 ====================================================
