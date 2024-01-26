@@ -79,6 +79,8 @@ class PN532_I2C(PN532):
         self.debug = debug
         self._irq = irq
         self._req = req
+        # https://raspberrypi.stackexchange.com/questions/12966/what-is-the-difference-between-board-and-bcm-for-gpio-pin-numbering
+        # Setting which way we read the pins on the board.
         GPIO.setmode(GPIO.BCM)
         # With I2C, we recommend connecting RSTPD_N (reset) to a digital pin for manual
         # harware reset
