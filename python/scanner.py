@@ -34,40 +34,27 @@ class Nfc():
     #Private method so that it shouldn't be accessed by users.
     def __loop(self) -> None:
         while self.run:
-            systemCode = 0xFFFF
-            requestCode = 0x01  # System Code request
+            try:
+                uid = self.nfc.read_passive_target()
+                print(f"Card UID: {uid}")
+                
+                # If we already encountered this ID within 1 seconds, sleep, refresh the current time and re-run the loop.
+                # This is done in case the NFC tag is held in range for a longer period.
+                if (uid == self.previousId and (time.time() - self.previousTime) < 1):
+                    #Refresh the time when the card was encountered last.
+                    self.previousTime = time.time()
+                    time.sleep(.5)
+                    continue
 
-            # Wait for an FeliCa type cards.
-            # When one is found, some basic information such as IDm, PMm, and System Code are retrieved.
-            # ret, idm, pwm, systemCodeResponse = self.nfc.felica_Polling(systemCode, requestCode, 5000)
-            uid = self.nfc.read_passive_target()
-            print(uid)
+                self.previousTime = time.time() #time.time gets the current time
+                self.previousId = uid
+                self.read_data()
 
-            #If the ret's value is anything other than 1, sleep and retry, because we haven't found an NFC tag.
-            # if (ret != 1):
-            #     time.sleep(.5)
-            #     continue
-            
-            # If we already encountered this ID within 1 seconds, sleep, refresh the current time and re-run the loop.
-            # This is done in case the NFC tag is held in range for a longer period.
-            # if (idm == self.previousId and (time.time() - self.previousTime) < 1):
-            #     #Refresh the time when the card was encountered last.
-            #     self.previousTime = time.time()
-            #     time.sleep(.5)
-            #     continue
+                # Wait 1 second before continuing
+                time.sleep(1)
 
-            print("Found a card!")
-            #Convert the integert from each to hexadecimal number
-            #Makes it easier to read
-            # print("  IDm : {}".format(hex(int.from_bytes(idm))))
-            # print("  PWm: {}".format(hex(int.from_bytes(pwm))))
-            # print("  System Code: {:x}".format(hex(int.from_bytes(systemCode))))
-            # self.previousTime = time.time() #time.time gets the current time
-            # self.previousId = idm
-            self.read_data()
-
-            # Wait 1 second before continuing
-            time.sleep(1)
+            except Exception as ex:
+                print(f"Exception in loop: {ex}")
 
     def start(self) -> None:
         self.run = True
@@ -85,17 +72,11 @@ class Nfc():
         print("Program Finished.")
 
     def read_data(self):
-        # FeliCa_card_read.py
-        serviceCodeList = [0x000B]
-        blockList = [0x8000, 0x8001, 0x8002]
-        #Requests the NFC reader to read in values.
-        ret, blocks = self.nfc.felica_ReadWithoutEncryption(serviceCodeList, blockList)
-        #If the value is anything other than -1, the read was unsuccessful.
-        if (ret != 1):
-            print("error")
+        data = self.nfc.mifare_classic_read_block()
+        if data == None:
+            print("Read error!")
+            time.sleep(1)
             return
         
-        uuid = hex(int.from_bytes(blocks))
-        #If successful, print the data stored on the NFC Tag.
-        print(f"  BlockData: {uuid}")
-        self.read_callback(uuid)
+        print("Found a card!")
+        print(f"Data from card: \n{data.hex()}")
