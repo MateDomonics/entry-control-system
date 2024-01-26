@@ -21,12 +21,12 @@ class Nfc():
         #self.nfc.begin()
 
         versiondata = self.nfc.get_firmware_version()
-        
+        # Output, without formatting: (50, 1, 6, 7)
+        #                        Checksum, major, minor, tertiary
+
         # print("Found chip PN5 {:#x} Firmware ver. {:d}.{:d}".format((versiondata >> 24) & 0xFF, (versiondata >> 16) & 0xFF,
         #                                                             (versiondata >> 8) & 0xFF))
         print(f"Current version of the PN532 board: {versiondata[1]}.{versiondata[2]}.{versiondata[3]}")
-        # Checksum, major, minor, tertiary
-        # (50, 1, 6, 7)
         
         # self.nfc.setPassiveActivationRetries(0xFF)
         # self.nfc.SAMConfig()
@@ -39,7 +39,9 @@ class Nfc():
 
             # Wait for an FeliCa type cards.
             # When one is found, some basic information such as IDm, PMm, and System Code are retrieved.
-            ret, idm, pwm, systemCodeResponse = self.nfc.felica_Polling(systemCode, requestCode, 5000)
+            # ret, idm, pwm, systemCodeResponse = self.nfc.felica_Polling(systemCode, requestCode, 5000)
+            uid = self.nfc.read_passive_target()
+            print(uid)
 
             #If the ret's value is anything other than 1, sleep and retry, because we haven't found an NFC tag.
             if (ret != 1):
@@ -73,7 +75,7 @@ class Nfc():
         #This allows the program to keep running while the __loop method keeps running.
         self.thread = Thread(target=self.__loop)
         #Name the thread so that it can be followed.
-        self.thread.name = "NFC Polling"
+        self.thread.name = "NFC Polling Thread"
         self.thread.start()
 
     def stop(self) -> None:
