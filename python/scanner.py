@@ -28,6 +28,7 @@ class Nfc():
         #                                                             (versiondata >> 8) & 0xFF))
         print(f"Current version of the PN532 board: {versiondata[1]}.{versiondata[2]}.{versiondata[3]}")
         
+        self.nfc.SAM_configuration()
         # self.nfc.setPassiveActivationRetries(0xFF)
         # self.nfc.SAMConfig()
 
