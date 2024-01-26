@@ -17,7 +17,7 @@ class Nfc():
         self.run = True
         # self.i2c = Pn532I2c(1)
         # self.nfc = Pn532(self.i2c)
-        self.nfc = PN532_I2C(debug = False, reset = 20, req = 16)
+        self.nfc = PN532_I2C(debug = True, reset = 20, req = 16)
         #self.nfc.begin()
         
         try:
@@ -29,8 +29,9 @@ class Nfc():
         if versiondata == 0:
             print("Didn't find PN53x board")
             raise RuntimeError("Didn't find PN53x board")
-        print("Found chip PN5 {:#x} Firmware ver. {:d}.{:d}".format((versiondata >> 24) & 0xFF, (versiondata >> 16) & 0xFF,
-                                                                    (versiondata >> 8) & 0xFF))
+        # print("Found chip PN5 {:#x} Firmware ver. {:d}.{:d}".format((versiondata >> 24) & 0xFF, (versiondata >> 16) & 0xFF,
+        #                                                             (versiondata >> 8) & 0xFF))
+        print(versiondata)
         
         self.nfc.setPassiveActivationRetries(0xFF)
         self.nfc.SAMConfig()
