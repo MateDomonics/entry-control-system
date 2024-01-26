@@ -44,26 +44,26 @@ class Nfc():
             print(uid)
 
             #If the ret's value is anything other than 1, sleep and retry, because we haven't found an NFC tag.
-            if (ret != 1):
-                time.sleep(.5)
-                continue
+            # if (ret != 1):
+            #     time.sleep(.5)
+            #     continue
             
             # If we already encountered this ID within 1 seconds, sleep, refresh the current time and re-run the loop.
             # This is done in case the NFC tag is held in range for a longer period.
-            if (idm == self.previousId and (time.time() - self.previousTime) < 1):
-                #Refresh the time when the card was encountered last.
-                self.previousTime = time.time()
-                time.sleep(.5)
-                continue
+            # if (idm == self.previousId and (time.time() - self.previousTime) < 1):
+            #     #Refresh the time when the card was encountered last.
+            #     self.previousTime = time.time()
+            #     time.sleep(.5)
+            #     continue
 
             print("Found a card!")
             #Convert the integert from each to hexadecimal number
             #Makes it easier to read
-            print("  IDm : {}".format(hex(int.from_bytes(idm))))
-            print("  PWm: {}".format(hex(int.from_bytes(pwm))))
-            print("  System Code: {:x}".format(hex(int.from_bytes(systemCode))))
-            self.previousTime = time.time() #time.time gets the current time
-            self.previousId = idm
+            # print("  IDm : {}".format(hex(int.from_bytes(idm))))
+            # print("  PWm: {}".format(hex(int.from_bytes(pwm))))
+            # print("  System Code: {:x}".format(hex(int.from_bytes(systemCode))))
+            # self.previousTime = time.time() #time.time gets the current time
+            # self.previousId = idm
             self.read_data()
 
             # Wait 1 second before continuing
