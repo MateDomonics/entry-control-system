@@ -35,9 +35,8 @@ class Nfc():
     def __loop(self) -> None:
         while self.run:
             try:
-                uid = self.nfc.read_passive_target()
+                uid = self.nfc.read_passive_target(timeout=10)
                 if uid is None:
-                    # uid = self.nfc.read_passive_target(card_baud=)
                     continue
                 print(f"Card UID: {uid}")
                 
