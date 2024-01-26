@@ -78,7 +78,7 @@ class Nfc():
 
     def read_data(self):
         try:
-            data = self.nfc.ntag2xx_read_block(block_number=0)
+            data = self.nfc.mifare_classic_read_block(block_number=5)
             print(f"Data from card: \n{[hex(i) for i in data]}")
         except:
             print("Read Exception.")
