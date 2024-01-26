@@ -39,7 +39,6 @@ class Nfc():
                 uid = self.nfc.read_passive_target(timeout=10)
                 if uid is None:
                     continue
-                print(f"Card UID: {[hex(i) for i in uid]}")
                 
                 # If we already encountered this ID within 1 seconds, sleep, refresh the current time and re-run the loop.
                 # This is done in case the NFC tag is held in range for a longer period.
@@ -48,6 +47,8 @@ class Nfc():
                     self.previousTime = time.time()
                     time.sleep(1)
                     continue
+
+                print(f"Card UID: {[hex(i) for i in uid]}")
 
                 self.previousTime = time.time() #time.time gets the current time
                 self.previousId = uid
@@ -75,11 +76,14 @@ class Nfc():
         print("Program Finished.")
 
     def read_data(self):
-        data = self.nfc.mifare_classic_read_block(block_number=0)
-        if data == None:
-            print("Read error!")
-            time.sleep(1)
-            return
-        
-        print("Found a card!")
-        print(f"Data from card: \n{[hex(i) for i in data]}")
+        try:
+            data = self.nfc.mifare_classic_read_block(block_number=1)
+            if data == None:
+                print("Read error!")
+                time.sleep(1)
+                return
+            
+            print("Found a card!")
+            print(f"Data from card: \n{[hex(i) for i in data]}")
+        except:
+            print("Read Exception.")
