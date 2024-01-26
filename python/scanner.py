@@ -78,13 +78,7 @@ class Nfc():
 
     def read_data(self):
         try:
-            data = self.nfc.mifare_classic_read_block(block_number=1)
+            data = self.nfc.ntag2xx_read_block(block_number=0)
             print(f"Data from card: \n{[hex(i) for i in data]}")
         except:
             print("Read Exception.")
-            self.nfc.mifare_classic_write_block(block_number=1, data=bytes("AAAABBBBCCCCDDDD", encoding="utf-8"))
-            print("Data written to NFC tag.")
-            time.sleep(1)
-
-            data = self.nfc.mifare_classic_read_block(block_number=1)
-            print(f"Data from card: \n{[hex(i) for i in data]}")
