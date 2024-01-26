@@ -17,7 +17,7 @@ class Nfc():
         self.run = True
         # self.i2c = Pn532I2c(1)
         # self.nfc = Pn532(self.i2c)
-        self.nfc = PN532_I2C(debug = True, reset = 20, req = 16)
+        self.nfc = PN532_I2C(debug = False, reset = 20, req = 16)
         #self.nfc.begin()
 
         versiondata = self.nfc.get_firmware_version()
@@ -75,11 +75,11 @@ class Nfc():
         print("Program Finished.")
 
     def read_data(self):
-        data = self.nfc.mifare_classic_read_block()
+        data = self.nfc.mifare_classic_read_block(block_number=0)
         if data == None:
             print("Read error!")
             time.sleep(1)
             return
         
         print("Found a card!")
-        print(f"Data from card: \n{data.hex()}")
+        print(f"Data from card: \n{[hex(i) for i in data]}")
