@@ -20,5 +20,5 @@ if __name__ == "__main__":
     # exit(0)
     nfc_reader = Nfc(callback)
     nfc_reader.start()
-    input("Press RETURN to stop.")
+    input("Press RETURN to stop.\n")
     nfc_reader.stop()
