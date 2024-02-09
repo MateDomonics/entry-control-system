@@ -1,6 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 
+// Created using https://github.com/gitname/react-gh-pages
 function App() {
   return (
     <div className="App">
