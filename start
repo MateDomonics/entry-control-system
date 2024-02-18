@@ -3,10 +3,20 @@
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 cd $SCRIPT_DIR
 
+#https://sentry.io/answers/determine-whether-a-directory-exists-in-bash/
+#If venv doesn't exist, create venv and install dependencies.
+if ![ -d venv]
+then
+    python3 -m venv venv
+    source venv/bin/activate
+    pip install -r dependencies.txt
+fi
+
+#If not in venv, activate venv.
 if [[ "$VIRTUAL_ENV" == "" ]]
 then
   source venv/bin/activate
 fi
 
 cd python
-python3 main.py
+python main.py
