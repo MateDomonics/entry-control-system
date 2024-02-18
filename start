@@ -7,6 +7,7 @@ cd $SCRIPT_DIR
 #If venv doesn't exist, create venv and install dependencies.
 if ! [ -d venv ]
 then
+    echo "venv doesn't exist, creating venv."
     python3 -m venv venv
     source venv/bin/activate
     pip install -r dependencies.txt
@@ -15,7 +16,7 @@ fi
 #If not in venv, activate venv.
 if [[ "$VIRTUAL_ENV" == "" ]]
 then
-  source venv/bin/activate
+    source venv/bin/activate
 fi
 
 cd python
