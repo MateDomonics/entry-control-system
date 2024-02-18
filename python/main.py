@@ -3,10 +3,12 @@ import requests
 import time
 from hashlib import md5
 
+#Use the md5 hash of a user's full name and email address.
+#This ensures a unique user ID.
 fake_user1 = "John;Doe;jodoe@test.com"
 fake_user2 = "Jane;Doe;jadoe@test.com"
-fake_user1_md5 = md5(fake_user1).digest()
-fake_user2_md5 = md5(fake_user2).digest()
+fake_user1_md5 = md5(fake_user1.encode()).digest()
+fake_user2_md5 = md5(fake_user2.encode()).digest()
 
 api = "https://eooorfidlkf4wow.m.pipedream.net"
 #Key value pair where the key is the user's ID and the value shows whether they are present at the "venue" or not.
