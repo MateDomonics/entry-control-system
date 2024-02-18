@@ -6,27 +6,24 @@ from hashlib import md5
 #This ensures a unique user ID.
 fake_user1 = "John;Doe;jodoe@test.com"
 fake_user2 = "Jane;Doe;jadoe@test.com"
-fake_user1_md5 = md5(fake_user1.encode()).digest()
-fake_user2_md5 = md5(fake_user2.encode()).digest()
 
 api = "https://eooorfidlkf4wow.m.pipedream.net"
 #Key value pair where the key is the user's ID and the value shows whether they are present at the "venue" or not.
 database = {}
-users = [fake_user1_md5, fake_user2_md5]
+users = [fake_user1, fake_user2]
 nfc_reader:Nfc = None
 
 def callback(uuid: int) -> None:
     if uuid not in users:
-        print("Unknown Card.")
-        choice = input("Do you want to assign the card to a user? (y/n)")
+        choice = input("Unknown card. Do you want to assign the card to a user? (y/n)")
         if choice.lower() not in ["y", "yes", "ye"]:
             return
         
         print("Select a user")
         for i, user in enumerate(users):
             print(f"{i}: {user}")
-        index = input("Type in the number of the user you want to select.")
-        nfc_reader.write_data(users[index], uuid)
+        index = int(input("Type in the number of the user you want to select."))
+        nfc_reader.write_data(md5(users[index].encode()).digest(), uuid)
 
         print("Finished.")
         return
