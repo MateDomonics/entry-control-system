@@ -5,6 +5,8 @@
 This is the GitHub Repository for KapU, a Fourth Year Project developed by Máté Domonics, studying at SETU Waterford.
 The project utilizes a Raspberry Pi, along with a PN532 NFC Scanner module to scan NFC tags and interact with a DynamoDB Database to check if a customer's UID is present.
 
+[Official GitHub Pages Website](https://matedomonics.github.io/entry-control-system/)
+
 ## User Setup
 
 1. Clone the repository onto a Raspberry Pi which has been set up with the capability to run a PN532 NFC HAT Module.
