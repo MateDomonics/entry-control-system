@@ -60,7 +60,10 @@ TO-DO:
 
 ## Sources
 
-- https://github.com/soonuse/pn532-nfc-hat
+- [PN532-NFC-HAT GitHub Repository](https://github.com/soonuse/pn532-nfc-hat)
+
 Using parts of this github repo (pn532.py, i2c.py).
 
-- https://github.com/sn4k3/FakeRPi
+- [FakeRPi GitHub Repository](https://github.com/sn4k3/FakeRPi)
+
+Used to help with developing Raspberry Pi programs on Windows.
