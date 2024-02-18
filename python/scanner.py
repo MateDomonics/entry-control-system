@@ -15,22 +15,15 @@ class Nfc():
         self.previousTime = None
         self.thread = None
         self.run = True
-        # self.i2c = Pn532I2c(1)
-        # self.nfc = Pn532(self.i2c)
         self.nfc = PN532_I2C(debug = False, reset = 20, req = 16)
-        #self.nfc.begin()
 
         versiondata = self.nfc.get_firmware_version()
         # Output, without formatting: (50, 1, 6, 7)
         #                        Checksum, major, minor, tertiary
 
-        # print("Found chip PN5 {:#x} Firmware ver. {:d}.{:d}".format((versiondata >> 24) & 0xFF, (versiondata >> 16) & 0xFF,
-        #                                                             (versiondata >> 8) & 0xFF))
         print(f"Current version of the PN532 board: {versiondata[1]}.{versiondata[2]}.{versiondata[3]}")
         
         self.nfc.SAM_configuration()
-        # self.nfc.setPassiveActivationRetries(0xFF)
-        # self.nfc.SAMConfig()
 
     #Private method so that it shouldn't be accessed by users.
     def __loop(self) -> None:
@@ -40,7 +33,7 @@ class Nfc():
                 if uid is None:
                     continue
                 
-                # If we already encountered this ID within 1 seconds, sleep, refresh the current time and re-run the loop.
+                # If we already encountered this ID within 15 seconds, sleep, refresh the current time and re-run the loop.
                 # This is done in case the NFC tag is held in range for a longer period.
                 if (uid == self.previousId and (self.previousTime is None or (time.time() - self.previousTime) < 15)):
                     #Refresh the time when the card was encountered last.
@@ -80,5 +73,6 @@ class Nfc():
         try:
             data = self.nfc.mifare_classic_read_block(block_number=5)
             print(f"Data from card: \n{[hex(i) for i in data]}")
-        except:
+        except Exception as x:
             print("Read Exception.")
+            print(x)
