@@ -13,20 +13,20 @@ fake_user2_md5 = md5(fake_user2.encode()).digest()
 api = "https://eooorfidlkf4wow.m.pipedream.net"
 #Key value pair where the key is the user's ID and the value shows whether they are present at the "venue" or not.
 database = {}
-users = {fake_user1_md5: fake_user1, fake_user2_md5: fake_user2}
+users = {fake_user1: fake_user1_md5, fake_user2: fake_user2_md5}
 nfc_reader:Nfc = None
 
 def callback(uuid: int) -> None:
-    if uuid not in users:
+    if uuid not in list(users.values()):
         choice = input("Unknown card. Do you want to assign the card to a user? (y/n)")
         if choice.lower() not in ["y", "yes", "ye"]:
             return
         
         print("Select a user")
-        for i, user in enumerate(list(users.values())):
+        for i, user in enumerate(list(users.keys())):
             print(f"{i}: {user}")
         index = int(input("Type in the number of the user you want to select."))
-        nfc_reader.write_data(list(users.keys())[index])
+        nfc_reader.write_data(list(users.values())[index])
 
         print("Finished.")
         return
