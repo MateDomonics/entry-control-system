@@ -16,7 +16,7 @@ database = {}
 users = {fake_user1: fake_user1_md5, fake_user2: fake_user2_md5}
 nfc_reader:Nfc = None
 
-def callback(uuid: int) -> None:
+def callback(uuid: bytes) -> None:
     if uuid not in list(users.values()):
         choice = input("Unknown card. Do you want to assign the card to a user? (y/n)")
         if choice.lower() not in ["y", "yes", "ye"]:
@@ -32,9 +32,8 @@ def callback(uuid: int) -> None:
         return
     
     #If the user is not present in the database, the default value will be "False".
-    database[uuid] = not database.get(uuid, False) # Reverse the current status of the client who tagged their NFC tag, meaning that
-                                                    #if they were present, they left, and vice versa.
-    print()
+    database[uuid.hex()] = not database.get(uuid.hex(), False) # Reverse the current status of the client who tagged their NFC tag, meaning that
+                                                                #if they were present, they left, and vice versa.
     response = requests.put(api, json = database)
     print(f"Server Response: {response.json()}")
 
