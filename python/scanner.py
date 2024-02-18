@@ -1,5 +1,5 @@
 from typing import Callable
-from pn532 import PN532_I2C, MIFARE_CMD_AUTH_B
+import pn532
 import time
 from threading import Thread
 
@@ -16,7 +16,7 @@ class Nfc():
         self.previousTime = None
         self.thread = None
         self.run = True
-        self.nfc = PN532_I2C(debug = False, reset = 20, req = 16)
+        self.nfc = pn532.PN532_I2C(debug = False, reset = 20, req = 16)
 
         versiondata = self.nfc.get_firmware_version()
         # Output, without formatting: (50, 1, 6, 7)
@@ -71,7 +71,7 @@ class Nfc():
         print("Program Finished.")
 
     def read_data(self, uid):
-        if not self.nfc.mifare_classic_authenticate_block(uid, 4, MIFARE_CMD_AUTH_B, Nfc.CARD_KEY):
+        if not self.nfc.mifare_classic_authenticate_block(uid, 4, pn532.MIFARE_CMD_AUTH_B, Nfc.CARD_KEY):
             print("Failed to authenticate with card.")
         try:
             data = self.nfc.mifare_classic_read_block(block_number=4)
