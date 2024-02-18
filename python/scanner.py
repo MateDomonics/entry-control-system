@@ -48,7 +48,7 @@ class Nfc():
                 self.previousTime = time.time() #time.time gets the current time
                 self.previousId = uid
                 # self.read_callback(int.from_bytes(self.read_data(uid)))
-                self.read_data(uid)
+                self.read_data()
 
                 # Wait 1 second before continuing
                 time.sleep(1)
