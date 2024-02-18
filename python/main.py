@@ -6,7 +6,7 @@ api = "https://eooorfidlkf4wow.m.pipedream.net"
 #Key value pair where the key is the user's ID and the value shows whether they are present at the "venue" or not.
 database = {}
 
-def callback(uuid: str) -> None:
+def callback(uuid: int) -> None:
     #If the user is not present in the database, the default value will be "False".
     database[uuid] = not database.get(uuid, False) # Reverse the current status of the client who tagged their NFC tag, meaning that
                                                     #if they were present, they left, and vice versa.
