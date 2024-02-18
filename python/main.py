@@ -23,7 +23,7 @@ def callback(uuid: int) -> None:
         for i, user in enumerate(users):
             print(f"{i}: {user}")
         index = int(input("Type in the number of the user you want to select."))
-        nfc_reader.write_data(md5(users[index].encode()).digest(), uuid)
+        nfc_reader.write_data(md5(users[index].encode()).digest())
 
         print("Finished.")
         return
