@@ -52,6 +52,7 @@ TO-DO:
 - Fixing imports, adding comments.
 - Implemented the ability to write to NFC Tags.
 - Wrote documentation in `README.md`, which will be kept up-to-date from now on.
+- Merged `proof-of-concept` branch to `main`
 
 TO-DO:
 
