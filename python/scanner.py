@@ -1,5 +1,5 @@
 from typing import Callable
-from pn532 import PN532_I2C
+from pn532 import PN532_I2C, MIFARE_CMD_AUTH_B
 import time
 from threading import Thread
 
@@ -7,6 +7,7 @@ from threading import Thread
 
 # Create the Nfc class for reusability.
 class Nfc():
+    CARD_KEY = [0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF]
     #The __init__ method returns with an instance of the "Nfc" class.
     def __init__(self, read_callback: Callable[[str], None]) -> "Nfc":
         # FeliCa_card_detection.py
@@ -46,7 +47,7 @@ class Nfc():
 
                 self.previousTime = time.time() #time.time gets the current time
                 self.previousId = uid
-                self.read_data()
+                self.read_data(uid)
 
                 # Wait 1 second before continuing
                 time.sleep(1)
@@ -69,11 +70,12 @@ class Nfc():
         self.thread.join()
         print("Program Finished.")
 
-    def read_data(self):
-        for i in range(0,20):
-            try:
-                data = self.nfc.mifare_classic_read_block(block_number=i)
-                print(f"Data from card block {i}: \n{[hex(i) for i in data]}")
-            except Exception as x:
-                print(f"Read Exception on block {i}.")
-                print(x)
+    def read_data(self, uid):
+        if not self.nfc.mifare_classic_authenticate_block(uid, 4, MIFARE_CMD_AUTH_B, Nfc.CARD_KEY):
+            print("Failed to authenticate with card.")
+        try:
+            data = self.nfc.mifare_classic_read_block(block_number=4)
+            print(f"Data from card: \n{[hex(i) for i in data]}")
+        except Exception as x:
+            print(f"Read Exception.")
+            print(x)
