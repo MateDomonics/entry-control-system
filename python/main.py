@@ -1,6 +1,5 @@
 from scanner import Nfc
 import requests
-import time
 from hashlib import md5
 
 #Use the md5 hash of a user's full name and email address.
@@ -39,10 +38,6 @@ def callback(uuid: int) -> None:
     print(f"Server Response: {response.json()}")
 
 if __name__ == "__main__":
-    # callback("test")
-    # time.sleep(2)
-    # callback("test")
-    # exit(0)
     nfc_reader = Nfc(callback)
     nfc_reader.start()
     input("Press RETURN to stop.\n")
