@@ -19,6 +19,7 @@ def callback(_uuid: bytes) -> None:
             return
         
         new_user = user_manager.create_user()
+        print(new_user)
         #The UUID's hex value is converted into bytes, which is written onto the NFC tag.
         nfc_reader.write_data(bytes.fromhex(new_user.uuid))
         database[new_user.uuid] = new_user
@@ -29,7 +30,7 @@ def callback(_uuid: bytes) -> None:
         
         print("Finished.")
         return
-            
+          
     
     #If the user is not present in the database, the default value will be "False".
     database[uuid] = not database.get(uuid, False) # Reverse the current status of the client who tagged their NFC tag, meaning that

@@ -39,6 +39,7 @@ class User_manager():
         phone_number = input("Please enter the customer's Phone Number: ")
         #UUID generates a UUID object, which is then converted into a hexadecimal number.
         user = User(uuid4().hex, first_name, last_name, email, phone_number, active_subscription=True)
+        print(user)
         self.save_user(user)
         return user
 
