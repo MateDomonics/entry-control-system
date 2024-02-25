@@ -74,12 +74,9 @@ class User_manager():
     def update_user_presence(self, user: User) -> None:
         response = self.client.update_item(
             TableName = self.table_name,
-            Key = {
-                "uuid": {
-                    "S": user.uuid
-                },
-            },
-            UpdateExpression = f"SET inside_facility = {user.inside_facility}"
+            Key = {"uuid": user.uuid},
+            UpdateExpression = f"SET inside_facility = :if",
+            ExpressionAttributeValues = {":if": user.inside_facility}
         )
     
     def get_user(self, uuid: str) -> Union[User, None]:
