@@ -28,7 +28,7 @@ class User_manager():
             raise FileNotFoundError("Couldn't create User Manager. File not found.")
         with open(file_path, "r") as fp:
             data = fp.read(-1).split("\n")
-            if len(data) != 2:
+            if len(data) < 2:
                 raise Exception("Couldn't create User Manager. Wrong file format/content.")
             return User_manager(aws_ak_id=data[0], aws_sak=data[1])
 
