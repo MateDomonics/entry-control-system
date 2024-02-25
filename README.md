@@ -60,6 +60,19 @@ TO-DO:
 
 - Move on from using fake users to test writing and reading to actually using DynamoDB on AWS.
 
+### February 25th, 2024
+
+- Made sure to NOT upload my AWS credentials to GitHub like an idiot.
+- Added the ability to create a new user on DynamoDB using the program.
+- Added the ability to get a user from DynamoDB.
+- Tried to implement the ability to update a user on DynamoDB. (Doesn't work yet.)
+- Fixed a GPIO warning that was thrown everytime because no cleanup was done.
+- Reduced print statements to prepare for a "release build".
+
+TO-DO:
+
+- Boto3 documentation is absolutely shocking, so the update method still doesn't work. Try figure it out.
+
 ## Sources
 
 - [PN532-NFC-HAT GitHub Repository](https://github.com/soonuse/pn532-nfc-hat)

@@ -75,7 +75,7 @@ class User_manager():
         response = self.client.update_item(
             TableName = self.table_name,
             Key = {"uuid": user.uuid},
-            UpdateExpression = f"SET inside_facility = :if",
+            UpdateExpression = "SET inside_facility = :if",
             ExpressionAttributeValues = {":if": user.inside_facility}
         )
     
