@@ -22,12 +22,13 @@ class Nfc():
         # Output, without formatting: (50, 1, 6, 7)
         #                        Checksum, major, minor, tertiary
 
-        print(f"Current version of the PN532 board: {versiondata[1]}.{versiondata[2]}.{versiondata[3]}")
+        #print(f"Current version of the PN532 board: {versiondata[1]}.{versiondata[2]}.{versiondata[3]}")
         
         self.nfc.SAM_configuration()
 
     #Private method so that it shouldn't be accessed by users.
     def __loop(self) -> None:
+        print("NFC Reader ready.")
         while self.run:
             try:
                 uid = self.nfc.read_passive_target(timeout=10)
@@ -43,7 +44,7 @@ class Nfc():
                     continue
 
                 print("Found a card!")
-                print(f"Card UID: {[hex(i) for i in uid]}")
+                # print(f"Card UID: {[hex(i) for i in uid]}")
 
                 self.previousTime = time.time() #time.time gets the current time
                 self.previousId = uid
@@ -75,7 +76,7 @@ class Nfc():
         if not self.authenticate_card():
             return None
         data = self.nfc.mifare_classic_read_block(block_number=4)
-        print(f"Data from card: \n{[hex(i) for i in data]}")
+        # print(f"Data from card: \n{[hex(i) for i in data]}")
         return data
 
     def write_data(self, data: bytes):

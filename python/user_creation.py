@@ -39,7 +39,6 @@ class User_manager():
         phone_number = input("Please enter the customer's Phone Number: ")
         #UUID generates a UUID object, which is then converted into a hexadecimal number.
         user = User(uuid4().hex, first_name, last_name, email, phone_number, active_subscription=True)
-        print(user)
         self.save_user(user)
         return user
 
@@ -71,7 +70,6 @@ class User_manager():
                 }
             }
         )
-        print(response)
 
     def update_user_presence(self, user: User) -> None:
         response = self.client.update_item(
@@ -83,7 +81,6 @@ class User_manager():
             },
             UpdateExpression = f"SET #inside_facility = :{user.inside_facility}"
         )
-        print(response)
     
     def get_user(self, uuid: str) -> Union[User, None]:
         response = self.client.get_item(
