@@ -11,8 +11,9 @@ database = {}
 nfc_reader:Nfc = None
 user_manager = User_manager.load_access(path.join(path.dirname(path.dirname(__file__)), "aws_access"))
 
-def callback(uuid: bytes) -> None:
-    if uuid not in database:
+def callback(_uuid: bytes) -> None:
+    uuid = _uuid.hex()
+    if uuid not in database and not get_user_from_database(uuid):
         choice = input("Unknown card. Do you want to create a new user? (y/n)")
         if choice.lower() not in ["y", "yes", "ye"]:
             return
@@ -28,16 +29,23 @@ def callback(uuid: bytes) -> None:
         
         print("Finished.")
         return
+            
     
     #If the user is not present in the database, the default value will be "False".
-    database[uuid.hex()] = not database.get(uuid.hex(), False) # Reverse the current status of the client who tagged their NFC tag, meaning that
+    database[uuid] = not database.get(uuid, False) # Reverse the current status of the client who tagged their NFC tag, meaning that
                                                                 #if they were present, they left, and vice versa.
-    user_manager.update_user_presence(database[uuid.hex()])
+    user_manager.update_user_presence(database[uuid])
     # response = requests.put(api, json = database)
     # print(f"Server Response: {response.json()}")
 
+def get_user_from_database(uuid: str) -> bool:
+    user = user_manager.get_user(uuid)
+    if user is None:
+        return False
+    database[user.uuid] = user
+    return True
+
 if __name__ == "__main__":
-    user_manager.get_user("asd")
     nfc_reader = Nfc(callback)
     nfc_reader.start()
     #Registers an event handler to an exit signal (Ctrl + c)

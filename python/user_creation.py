@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import Optional
+from typing import Optional, Union
 from uuid import uuid4
 import boto3
 from os import path
@@ -84,7 +84,7 @@ class User_manager():
         )
         print(response)
     
-    def get_user(self, uuid: str) -> User:
+    def get_user(self, uuid: str) -> Union[User, None]:
         response = self.client.get_item(
             TableName = self.table_name,
             Key = {
@@ -93,4 +93,10 @@ class User_manager():
                 },
             },
         )
-        print(response)
+        if "Item" not in response:
+            return None
+        usable_response = response["Item"]
+        return User(usable_response["uuid"]["S"], usable_response["first_name"]["S"],
+                    usable_response["last_name"]["S"], usable_response["email"]["S"],
+                    usable_response["phone_number"]["S"], usable_response["active_subscription"]["BOOL"],
+                    usable_response["inside_facility"]["BOOL"])
