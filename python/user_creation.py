@@ -38,11 +38,13 @@ class User_manager():
         email = input("Please enter the customer's email: ")
         phone_number = input("Please enter the customer's Phone Number: ")
         #UUID generates a UUID object, which is then converted into a hexadecimal number.
-        return User(uuid4().hex, first_name, last_name, email, phone_number, active_subscription=True)
+        user = User(uuid4().hex, first_name, last_name, email, phone_number, active_subscription=True)
+        self.save_user(user)
+        return user
 
     #https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/dynamodb/client/put_item.html
     def save_user(self, user: User) -> None:
-        self.client.put_item(
+        response = self.client.put_item(
             TableName = self.table_name,
             Item = {
                 "uuid": {
@@ -68,3 +70,27 @@ class User_manager():
                 }
             }
         )
+        print(response)
+
+    def update_user_presence(self, user: User) -> None:
+        response = self.client.update_item(
+            TableName = self.table_name,
+            Key = {
+                "uuid": {
+                    "S": user.uuid
+                },
+            },
+            UpdateExpression = f"SET #inside_facility = :{user.inside_facility}"
+        )
+        print(response)
+    
+    def get_user(self, uuid: str) -> User:
+        response = self.client.get_item(
+            TableName = self.table_name,
+            Key = {
+                "uuid": {
+                    "S": uuid
+                },
+            },
+        )
+        print(response)
