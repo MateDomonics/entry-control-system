@@ -79,7 +79,7 @@ class User_manager():
                     "S": user.uuid
                 },
             },
-            UpdateExpression = f"SET inside_facility = :{user.inside_facility}"
+            UpdateExpression = f"SET inside_facility = {user.inside_facility}"
         )
     
     def get_user(self, uuid: str) -> Union[User, None]:
@@ -95,6 +95,6 @@ class User_manager():
             return None
         usable_response = response["Item"]
         return User(usable_response["uuid"]["S"], usable_response["first_name"]["S"],
-                    usable_response["last_name"]["S"], usable_response["email"]["S"],
+                    usable_response["last_name"]["S"], usable_response["email"]["S"], 
                     usable_response["phone_number"]["S"], usable_response["active_subscription"]["BOOL"],
                     usable_response["inside_facility"]["BOOL"])
