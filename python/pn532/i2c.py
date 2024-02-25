@@ -162,3 +162,6 @@ class PN532_I2C(PN532):
     def _write_data(self, framebytes):
         """Write a specified count of bytes to the PN532"""
         self._i2c.write(framebytes)
+
+    def cleanup(self) -> None:
+        GPIO.cleanup()

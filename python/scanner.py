@@ -68,6 +68,7 @@ class Nfc():
         self.run = False
         #Main thread tries to join the side thread. When successful, we are certain that the side thread stopped, therefore we are no longer polling.
         self.thread.join()
+        self.nfc.cleanup()
         print("Program Finished.")
 
     def read_data(self) -> bytes:
