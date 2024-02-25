@@ -79,7 +79,7 @@ class User_manager():
                     "S": user.uuid
                 },
             },
-            UpdateExpression = f"SET #inside_facility = :{user.inside_facility}"
+            UpdateExpression = f"SET inside_facility = :{user.inside_facility}"
         )
     
     def get_user(self, uuid: str) -> Union[User, None]:
