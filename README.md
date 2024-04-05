@@ -73,6 +73,20 @@ TO-DO:
 
 - Boto3 documentation is absolutely shocking, so the update method still doesn't work. Try figure it out.
 
+### April 5th, 2024
+
+Developer Note: Don't be scared by the huge gap in commits, most of my time was spent trying to figure out how Cognito User Pools worked before I realised that it's useless and I'm better off using API keys. Thank you John for pulling me out of that cursed rabbit hole.
+
+- Moved away from Boto3 to make use of API Gateway and Lambda Functions
+- Also moved away from using AWS Access Keys and Secret Access Keys to using an API Key.
+- Created new class ```api.py```, where the REST API calls are constructed.
+- Changed the ```user_creation.py``` class to accommodate for the new API.
+
+TO-DO:
+
+- Test the new API and make sure everything works as expected.
+- Update may still not work, make sure to test it.
+
 ## Sources
 
 - [PN532-NFC-HAT GitHub Repository](https://github.com/soonuse/pn532-nfc-hat)
