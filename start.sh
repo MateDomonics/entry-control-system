@@ -32,7 +32,7 @@ then
 fi
 
 #If not in venv, activate venv.
-if [ "$VIRTUAL_ENV" -eq "" ]
+if [ "$VIRTUAL_ENV" = "" ]
 then
     source venv/bin/activate
 fi
