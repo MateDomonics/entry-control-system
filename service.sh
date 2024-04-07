@@ -3,6 +3,6 @@
 #This means that all I need to do is connect my Pi to a monitor to show output.
 cd "$(dirname "$0")"
 
-sleep 10
+sleep 30
 
 x-terminal-emulator -e --wait start.sh
