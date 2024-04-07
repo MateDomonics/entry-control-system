@@ -41,7 +41,7 @@ This project is being developed on Windows, using WSL (Windows Subsystem for Lin
 
 TO-DO:
 
-- Can't scan NFC tag that came with Raspberry Pi.
+- Can't scan NFC tag that came with Raspberry Pi. &#x2714;
 
 ### February 9th, 2024
 
@@ -58,7 +58,7 @@ TO-DO:
 
 TO-DO:
 
-- Move on from using fake users to test writing and reading to actually using DynamoDB on AWS.
+- Move on from using fake users to test writing and reading to actually using DynamoDB on AWS. &#x2714;
 
 ### February 25th, 2024
 
@@ -71,7 +71,7 @@ TO-DO:
 
 TO-DO:
 
-- Boto3 documentation is absolutely shocking, so the update method still doesn't work. Try figure it out.
+- Boto3 documentation is absolutely shocking, so the update method still doesn't work. Try figure it out. &#x2714;
 
 ### April 5th, 2024
 
@@ -84,8 +84,14 @@ Developer Note: Don't be scared by the huge gap in commits, most of my time was 
 
 TO-DO:
 
-- Test the new API and make sure everything works as expected.
-- Update may still not work, make sure to test it.
+- Test the new API and make sure everything works as expected. &#x2714;
+- Update may still not work, make sure to test it. &#x2714;
+
+### April 7th, 2024
+
+- Made sure the API fully works.
+- Automated the git pulling, venv creation, requirement downloading and updating script.
+- **Minimum Viable Product Achieved**
 
 ## Sources
 
