@@ -40,6 +40,7 @@ def callback(_uuid: bytes) -> None:
 
 def get_user_from_database(uuid: str) -> bool:
     user = user_manager.get_user(uuid)
+    print(user)
     if user is None:
         return False
     database[user.uuid] = user
