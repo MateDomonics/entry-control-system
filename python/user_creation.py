@@ -74,7 +74,6 @@ class User_manager:
     
     def get_user(self, uuid: str) -> Union[User, None]:
         response = self.client.get_user_by_id(uuid)
-        print(response)
         if "Items" not in response or len(response["Items"]) != 1:
             return None
         usable_response = response["Items"][0]

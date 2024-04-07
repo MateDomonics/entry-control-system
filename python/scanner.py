@@ -43,7 +43,7 @@ class Nfc:
                     self.stop_event.wait(1)
                     continue
 
-                print("Found a card!")
+                #print("Found a card!")
                 # print(f"Card UID: {[hex(i) for i in uid]}")
 
                 self.previousTime = time.time() #time.time gets the current time
