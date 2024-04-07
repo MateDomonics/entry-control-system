@@ -4,12 +4,17 @@
 cd "$(dirname "$0")"
 
 #https://stackoverflow.com/questions/13702425/source-command-not-found-in-sh-shell
-echo "$(pwd)"
-source update.sh
-echo "update ran"
-#If the previous exit code was 1 (i.e. update.sh successfully ran and exited with code 1), run "start.sh" in a new terminal window.
-if [ $? -eq 1 ]
+
+#Fetch info on the branch and save the "head" of the local and remote branches.
+git remote update
+LOCAL=$(git rev-parse @)
+REMOTE=$(git rev-parse @{u})
+
+#If the two "heads" are not the same, do a "git pull".
+if [ "$LOCAL" != "$REMOTE" ]
 then
+    git pull
+    echo "Updates installed!"
     #https://stackoverflow.com/questions/12142031/run-commands-in-seperate-terminal-using-shell-script-bash
     x-terminal-emulator -e start.sh
     exit 0
@@ -23,11 +28,12 @@ then
     python3 -m venv venv
 fi
 
-#If we are still not in a venv, that probably means that the venv module is not present on the system, so install it by running "install.sh".
+#If we are still not in a venv, that probably means that the venv module is not present on the system, so install it.
 if ! [ -d venv ]
 then
     echo "Installing python virtualenv"
-    x-terminal-emulator -e install.sh
+    python -m pip install virtualenv
+    x-terminal-emulator -e start.sh
     exit 0
 fi
 
