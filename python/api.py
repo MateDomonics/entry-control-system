@@ -6,6 +6,7 @@ endpoint_url = "https://fl5loc5z14.execute-api.eu-west-1.amazonaws.com/Test"
 class Api:
     def __init__(self, api_key: str) -> None:
         self.api_key = api_key
+        print(api_key)
     
     def get_user_ids(self) -> List[str]:
         response = requests.get(endpoint_url, headers={"x-api-key":self.api_key})
