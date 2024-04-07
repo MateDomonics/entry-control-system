@@ -98,3 +98,4 @@ class Nfc:
             return True
         except PN532Error as ex:
             print(ex.errmsg)
+            raise ex
