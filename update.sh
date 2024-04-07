@@ -1,4 +1,4 @@
-#!bin/sh
+#!bin/bash
 cd "$(dirname "$0")"
 
 #Fetch info on the branch and save the "head" of the local and remote branches.

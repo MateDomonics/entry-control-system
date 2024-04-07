@@ -1,6 +1,6 @@
-#!bin/sh
+#!bin/bash
 cd "$(dirname "$0")"
 
 #Install virtualenv and then run the "start" file.
 python -m pip install virtualenv
-sh start.sh
+source start.sh

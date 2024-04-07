@@ -1,11 +1,10 @@
-#!bin/sh
+#!bin/bash
 #https://saturncloud.io/blog/how-to-get-the-directory-where-a-bash-script-is-located/
 #https://www.geeksforgeeks.org/dirname-command-in-linux-with-examples/
 cd "$(dirname "$0")"
 
 #https://stackoverflow.com/questions/13702425/source-command-not-found-in-sh-shell
-echo "$(pwd)"
-sh update.sh
+source update.sh
 
 #If the previous exit code was 1 (i.e. update.sh successfully ran and exited with code 1), run "start.sh" in a new terminal window.
 if [ $? -eq 1 ]
@@ -31,7 +30,7 @@ then
     exit 0
 fi
 
-sh venv/bin/activate
+source venv/bin/activate
 
 #Update dependencies and run "main.py"
 pip install -r dependencies.txt --upgrade
