@@ -14,6 +14,7 @@ class Api:
         return json.loads(response.text)
     
     def create_user(self, payload: Dict[str, Any]) -> bool:
+        print(payload)
         response = requests.put(endpoint_url, payload, headers={"x-api-key":self.api_key})
         print(f"PUT new user: {response.status_code}, {response.reason}\n{response.text}")
         return response.status_code == 200 
