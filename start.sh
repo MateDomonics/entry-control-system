@@ -31,13 +31,10 @@ then
     exit 0
 fi
 
-#If not in venv, activate venv.
-if [[ "$VIRTUAL_ENV" = "" ]]
-then
-    sh venv/bin/activate
-fi
+sh venv/bin/activate
 
 #Update dependencies and run "main.py"
 pip install -r dependencies.txt --upgrade
 cd python
 python main.py
+deactivate
