@@ -14,6 +14,7 @@ class Api:
         return json.loads(response.text)
     
     def create_user(self, payload: Dict[str, Any]) -> bool:
+        payload = json.dumps(payload)
         print(payload)
         response = requests.put(endpoint_url, payload, headers={"x-api-key":self.api_key})
         print(f"PUT new user: {response.status_code}, {response.reason}\n{response.text}")
@@ -25,6 +26,8 @@ class Api:
         return json.loads(response.text)
 
     def update_user(self, uuid: str, payload: Dict[str, Any]) -> bool:
+        payload = json.dumps(payload)
+        print(payload)
         response = requests.post("/".join([endpoint_url, uuid]), payload, headers={"x-api-key":self.api_key})
         print(f"POST update user: {response.status_code}, {response.reason}\n{response.text}")
         return response.status_code == 200 
