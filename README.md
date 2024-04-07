@@ -91,6 +91,7 @@ TO-DO:
 
 - Made sure the API fully works.
 - Automated the git pulling, venv creation, requirement downloading and updating script.
+- Added ```service.sh``` to help with running the program when I don't know the IP of the Pi (i.e. when I'm not at home).
 - **Minimum Viable Product Achieved**
 
 ## Sources
