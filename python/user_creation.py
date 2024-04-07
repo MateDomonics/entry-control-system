@@ -32,7 +32,7 @@ class User_manager:
             data = fp.read(-1).split("\n")
             return User_manager(api_key=data[0])
 
-    def create_user(self) -> User:
+    def create_user(self) -> Union[User, None]:
         first_name = input("Please enter the customer's First Name: ")
         last_name = input("Please enter the customer's Last Name: ")
         email = input("Please enter the customer's email: ")
@@ -40,12 +40,15 @@ class User_manager:
         #UUID generates a UUID object, which is then converted into a hexadecimal number.
         user = User(uuid4().hex, first_name, last_name, email, phone_number, active_subscription=True)
         print(f"User Created: {user}")
-        self.save_user(user)
-        return user
+        if self.save_user(user):
+            return user
+        print("User creation failed")
+        return None
+        
 
     #https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/dynamodb/client/put_item.html
-    def save_user(self, user: User) -> None:
-        self.client.create_user({
+    def save_user(self, user: User) -> bool:
+        return self.client.create_user({
             "TableName": self.table_name,
             "Item": {
                 "uuid": {
@@ -72,8 +75,8 @@ class User_manager:
             }
         })
 
-    def update_user_presence(self, user: User) -> None:
-        self.client.update_user(
+    def update_user_presence(self, user: User) -> bool:
+        return self.client.update_user(
             user.uuid,
             {
                 "TableName": self.table_name,

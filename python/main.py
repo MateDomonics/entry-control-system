@@ -18,6 +18,8 @@ def callback(_uuid: bytes) -> None:
             return
         
         new_user = user_manager.create_user()
+        if new_user is None:
+            return
         #The UUID's hex value is converted into bytes, which is written onto the NFC tag.
         nfc_reader.write_data(bytes.fromhex(new_user.uuid))
         database[new_user.uuid] = new_user
@@ -33,8 +35,10 @@ def callback(_uuid: bytes) -> None:
     #If the user is not present in the database, the default value will be "False".
     database[uuid].inside_facility = not database[uuid].inside_facility # Reverse the current status of the client who tagged their NFC tag, meaning that
                                                                         #if they were present, they left, and vice versa.
-    user_manager.update_user_presence(database[uuid])
-    print(f"Welcome {database[uuid].first_name}!" if database[uuid].inside_facility else "Have a nice day, see you soon!")
+    if user_manager.update_user_presence(database[uuid]):
+        print(f"Welcome {database[uuid].first_name}!" if database[uuid].inside_facility else "Have a nice day, see you soon!")
+    else:
+        print("Presence update failed.")
     # response = requests.put(api, json = database)
     # print(f"Server Response: {response.json()}")
 
