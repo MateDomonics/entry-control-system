@@ -77,7 +77,7 @@ class User_manager:
         print(response)
         if "Items" not in response:
             return None
-        usable_response = response["Items"]
+        usable_response = response["Items"][0]
         return User(usable_response["uuid"], usable_response["first_name"],
                     usable_response["last_name"], usable_response["email"], 
                     usable_response["phone_number"], usable_response["active_subscription"],
