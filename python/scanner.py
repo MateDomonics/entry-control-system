@@ -1,5 +1,5 @@
 from typing import Callable, Union
-from pn532 import PN532_I2C, MIFARE_CMD_AUTH_B
+from pn532 import PN532_I2C, MIFARE_CMD_AUTH_B, PN532Error
 import time
 #https://www.pythontutorial.net/python-concurrency/python-threading/
 #https://www.pythontutorial.net/python-concurrency/python-threading-event/
@@ -91,7 +91,10 @@ class Nfc:
     #https://github.com/leon-anavi/rpi-examples/blob/master/PN532/python/rfid-save.py
     #https://www.youtube.com/watch?v=kpaQAqhv4R0
     def authenticate_card(self, block_id: int) -> bool:
-        if not self.nfc.mifare_classic_authenticate_block(self.previousId, block_id, MIFARE_CMD_AUTH_B, Nfc.CARD_KEY):
-            print(f"Failed to authenticate card block {block_id}.")
-            return False
-        return True
+        try:
+            if not self.nfc.mifare_classic_authenticate_block(self.previousId, block_id, MIFARE_CMD_AUTH_B, Nfc.CARD_KEY):
+                print(f"Failed to authenticate card block {block_id}.")
+                return False
+            return True
+        except PN532Error as ex:
+            print(ex.errmsg)
