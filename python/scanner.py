@@ -37,7 +37,7 @@ class Nfc:
                 
                 # If we already encountered this ID within 15 seconds, sleep, refresh the current time and re-run the loop.
                 # This is done in case the NFC tag is held in range for a longer period.
-                if (uid == self.previousId and (self.previousTime is None or (time.time() - self.previousTime) < 15)):
+                if (uid == self.previousId and (self.previousTime is None or (time.time() - self.previousTime) < 5)):
                     #Refresh the time when the card was encountered last.
                     self.previousTime = time.time()
                     self.stop_event.wait(1)
