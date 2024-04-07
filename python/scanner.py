@@ -5,6 +5,7 @@ import time
 #https://www.pythontutorial.net/python-concurrency/python-threading-event/
 from threading import Thread, Event
 import traceback
+from sys import stderr
 
 # https://github.com/gassajor000/pn532pi/tree/master/examples
 
@@ -96,7 +97,7 @@ class Nfc:
     def authenticate_card(self, block_id: int) -> bool:
         try:
             if not self.nfc.mifare_classic_authenticate_block(self.previousId, block_id, MIFARE_CMD_AUTH_B, Nfc.CARD_KEY):
-                print(f"Failed to authenticate card block {block_id}.")
+                print(f"Failed to authenticate card block {block_id}.", file=stderr)
                 return False
             return True
         except PN532Error as ex:

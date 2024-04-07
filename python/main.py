@@ -3,6 +3,7 @@ from scanner import Nfc
 import atexit
 from os import path
 from user_creation import User_manager, User
+from sys import stderr
 
 #Key value pair where the key is the user's ID and the value shows whether they are present at the "venue" or not.
 database: Dict[str, User] = {}
@@ -42,15 +43,15 @@ def callback(_uuid: bytes) -> None:
     database[uuid].inside_facility = not database[uuid].inside_facility # Reverse the current status of the client who tagged their NFC tag, meaning that
                                                                         #if they were present, they left, and vice versa.
     if user_manager.update_user_presence(database[uuid]):
-        print(f"Welcome {database[uuid].first_name}!" if database[uuid].inside_facility else "Have a nice day, see you soon!")
+        print(f"Welcome {database[uuid].first_name}!" if database[uuid].inside_facility else f"Have a nice day {database[uuid].first_name}, see you soon!")
     else:
-        print("Presence update failed.")
+        print(f"Presence update failed for {database[uuid].first_name}.", file=stderr)
     # response = requests.put(api, json = database)
     # print(f"Server Response: {response.json()}")
 
 def get_user_from_database(uuid: str) -> bool:
     user = user_manager.get_user(uuid)
-    print(user)
+    #print(user)
     if user is None:
         return False
     database[user.uuid] = user

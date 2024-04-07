@@ -3,6 +3,7 @@ from typing import Optional, Union
 from uuid import uuid4
 from api import Api
 from os import path
+from sys import stderr
 
 @dataclass()
 class User:
@@ -42,7 +43,7 @@ class User_manager:
         print(f"User Created: {user}")
         if self.save_user(user):
             return user
-        print("User creation failed")
+        print("User creation failed", file=stderr)
         return None
         
 
