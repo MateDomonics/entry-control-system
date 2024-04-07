@@ -53,7 +53,7 @@ class Nfc:
                 self.stop_event.wait(1)
 
             except Exception as ex:
-                print(f"Exception in loop: {ex.with_traceback(None)}")
+                print(f"Exception in loop: {ex.__traceback__}")
 
     def start(self) -> None:
         self.stop_event.clear()

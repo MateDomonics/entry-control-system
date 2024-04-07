@@ -15,6 +15,9 @@ class User:
     #https://stackoverflow.com/questions/68874635/why-is-my-python-dataclass-not-initialising-boolean-correctly
     inside_facility: Optional[bool] = field(default=False)
 
+    def __str__(self) -> str:
+        return f"uuid: {self.uuid}, is inside: {self.inside_facility}"
+
     
 class User_manager:
     def __init__(self, api_key: str) -> None:
@@ -36,6 +39,7 @@ class User_manager:
         phone_number = input("Please enter the customer's Phone Number: ")
         #UUID generates a UUID object, which is then converted into a hexadecimal number.
         user = User(uuid4().hex, first_name, last_name, email, phone_number, active_subscription=True)
+        print(f"User Created: {user}")
         self.save_user(user)
         return user
 
