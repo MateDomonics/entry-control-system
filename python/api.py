@@ -23,6 +23,7 @@ class Api:
     def get_user_by_id(self, uuid: str) -> Dict[str, Any]:
         response = requests.get("/".join([endpoint_url, uuid]), headers={"x-api-key":self.api_key})
         print(f"GET user by ID: {response.status_code}, {response.reason} \n{response.text}")
+        print(response.raw)
         return json.loads(response.text)
 
     def update_user(self, uuid: str, payload: Dict[str, Any]) -> bool:
