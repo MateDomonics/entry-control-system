@@ -76,7 +76,7 @@ class User_manager:
         response = self.client.get_user_by_id(uuid)
         if "Item" not in response:
             return None
-        usable_response = response["Item"]
+        usable_response = response["Items"]
         return User(usable_response["uuid"]["S"], usable_response["first_name"]["S"],
                     usable_response["last_name"]["S"], usable_response["email"]["S"], 
                     usable_response["phone_number"]["S"], usable_response["active_subscription"]["BOOL"],
