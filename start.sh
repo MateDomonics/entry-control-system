@@ -4,8 +4,9 @@
 cd "$(dirname "$0")"
 
 #https://stackoverflow.com/questions/13702425/source-command-not-found-in-sh-shell
+echo "$(pwd)"
 source update.sh
-
+echo "update ran"
 #If the previous exit code was 1 (i.e. update.sh successfully ran and exited with code 1), run "start.sh" in a new terminal window.
 if [ $? -eq 1 ]
 then
