@@ -34,7 +34,7 @@ fi
 #If not in venv, activate venv.
 if [ "$VIRTUAL_ENV" = "" ]
 then
-    source venv/bin/activate
+    sh venv/bin/activate
 fi
 
 #Update dependencies and run "main.py"
