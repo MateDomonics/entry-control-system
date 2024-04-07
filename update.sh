@@ -1,6 +1,5 @@
 #!bin/sh
-SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-cd $SCRIPT_DIR
+cd "$(dirname "$0")"
 
 #Fetch info on the branch and save the "head" of the local and remote branches.
 git remote update

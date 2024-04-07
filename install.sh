@@ -1,7 +1,6 @@
 #!bin/sh
-SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-cd $SCRIPT_DIR
+cd "$(dirname "$0")"
 
 #Install virtualenv and then run the "start" file.
 python -m pip install virtualenv
-source start.sh
+. start.sh

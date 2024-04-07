@@ -1,9 +1,10 @@
 #!bin/sh
-#https://stackoverflow.com/questions/59895/how-do-i-get-the-directory-where-a-bash-script-is-located-from-within-the-script
-SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-cd $SCRIPT_DIR
+#https://saturncloud.io/blog/how-to-get-the-directory-where-a-bash-script-is-located/
+#https://www.geeksforgeeks.org/dirname-command-in-linux-with-examples/
+cd "$(dirname "$0")"
 
-source update.sh
+#https://stackoverflow.com/questions/13702425/source-command-not-found-in-sh-shell
+. update.sh
 
 #If the previous exit code was 1 (i.e. update.sh successfully ran and exited with code 1), run "start.sh" in a new terminal window.
 if [ $? -eq 1 ]
@@ -30,12 +31,12 @@ then
 fi
 
 #If not in venv, activate venv.
-if [[ "$VIRTUAL_ENV" == "" ]]
+if [ "$VIRTUAL_ENV" == "" ]
 then
     source venv/bin/activate
 fi
 
 #Update dependencies and run "main.py"
-pip install -r dependencies.txt --update
+pip install -r dependencies.txt --upgrade
 cd python
 python main.py
