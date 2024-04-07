@@ -6,6 +6,9 @@ git remote update
 LOCAL=$(git rev-parse @)
 REMOTE=$(git rev-parse @{u})
 
+echo "Current: $LOCAL"
+echo "Remote: $REMOTE"
+
 #If the two "heads" are not the same, do a "git pull".
 if [ "$LOCAL" != "$REMOTE" ]
 then
