@@ -51,27 +51,13 @@ class User_manager:
         return self.client.create_user({
             "TableName": self.table_name,
             "Item": {
-                "uuid": {
-                    "S": user.uuid
-                },
-                "first_name": {
-                    "S": user.first_name
-                },
-                "last_name": {
-                    "S": user.last_name
-                },
-                "email": {
-                    "S": user.email
-                },
-                "phone_number": {
-                    "S": user.phone_number
-                },
-                "active_subscription": {
-                    "BOOL": user.active_subscription
-                },
-                "inside_facility": {
-                    "BOOL": user.inside_facility
-                }
+                "uuid": user.uuid,
+                "first_name": user.first_name,
+                "last_name": user.last_name,
+                "email": user.email,
+                "phone_number": user.phone_number,
+                "active_subscription": user.active_subscription,
+                "inside_facility": user.inside_facility
             }
         })
 
