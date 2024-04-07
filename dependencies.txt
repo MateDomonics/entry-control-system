@@ -1,3 +1,2 @@
 requests
 RPi.GPIO
-boto3

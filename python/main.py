@@ -1,15 +1,13 @@
 from typing import Dict
 from scanner import Nfc
-import requests
-from hashlib import md5
 import atexit
 from os import path
 from user_creation import User_manager, User
 
-api = "https://eooorfidlkf4wow.m.pipedream.net"
 #Key value pair where the key is the user's ID and the value shows whether they are present at the "venue" or not.
 database: Dict[str, User] = {}
 nfc_reader:Nfc = None
+#Use the current python file's location to find the "aws_access" file which is one level above the python file.
 user_manager = User_manager.load_access(path.join(path.dirname(path.dirname(__file__)), "aws_access"))
 
 def callback(_uuid: bytes) -> None:
