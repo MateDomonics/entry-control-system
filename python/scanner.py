@@ -4,6 +4,7 @@ import time
 #https://www.pythontutorial.net/python-concurrency/python-threading/
 #https://www.pythontutorial.net/python-concurrency/python-threading-event/
 from threading import Thread, Event
+import traceback
 
 # https://github.com/gassajor000/pn532pi/tree/master/examples
 
@@ -53,7 +54,7 @@ class Nfc:
                 self.stop_event.wait(1)
 
             except Exception as ex:
-                print(f"Exception in loop: {ex.__traceback__}")
+                print(f"Exception in loop: {traceback.format_exception(ex)}")
 
     def start(self) -> None:
         self.stop_event.clear()
