@@ -20,6 +20,12 @@ def callback(_uuid: bytes) -> None:
         new_user = user_manager.create_user()
         if new_user is None:
             return
+        
+        if not nfc_reader.is_same_card_present():
+            print("Please keep the card on the reader.")
+            while not nfc_reader.is_same_card_present():
+                pass
+
         #The UUID's hex value is converted into bytes, which is written onto the NFC tag.
         nfc_reader.write_data(bytes.fromhex(new_user.uuid))
         database[new_user.uuid] = new_user

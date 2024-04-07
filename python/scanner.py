@@ -1,4 +1,4 @@
-from typing import Callable, Union
+from typing import Any, Callable, Union
 from pn532 import PN532_I2C, MIFARE_CMD_AUTH_B, PN532Error
 import time
 #https://www.pythontutorial.net/python-concurrency/python-threading/
@@ -55,6 +55,9 @@ class Nfc:
 
             except Exception:
                 print(f"Exception in loop: {traceback.format_exc()}")
+
+    def is_same_card_present(self) -> bool:
+        return self.previousId == self.nfc.read_passive_target(timeout=1)
 
     def start(self) -> None:
         self.stop_event.clear()
