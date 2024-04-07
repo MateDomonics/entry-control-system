@@ -74,10 +74,11 @@ class User_manager:
     
     def get_user(self, uuid: str) -> Union[User, None]:
         response = self.client.get_user_by_id(uuid)
-        if "Item" not in response:
+        print(response)
+        if "Items" not in response:
             return None
         usable_response = response["Items"]
-        return User(usable_response["uuid"]["S"], usable_response["first_name"]["S"],
-                    usable_response["last_name"]["S"], usable_response["email"]["S"], 
-                    usable_response["phone_number"]["S"], usable_response["active_subscription"]["BOOL"],
-                    usable_response["inside_facility"]["BOOL"])
+        return User(usable_response["uuid"], usable_response["first_name"],
+                    usable_response["last_name"], usable_response["email"], 
+                    usable_response["phone_number"], usable_response["active_subscription"],
+                    usable_response["inside_facility"])
