@@ -6,11 +6,20 @@ from user_creation import User_manager, User
 from sys import stderr
 
 #Key value pair where the key is the user's ID and the value shows whether they are present at the "venue" or not.
+#This is the "local database". For production, I would install a NoSQL database locally as a Docker Image and interact with that.
 database: Dict[str, User] = {}
 nfc_reader:Nfc = None
+
 #Use the current python file's location to find the "aws_access" file which is one level above the python file.
 user_manager = User_manager.load_access(path.join(path.dirname(path.dirname(__file__)), "aws_access"))
 
+"""
+This is the method that gets run when we detect an NFC tag.
+Check if the user we found on the NFC tag is present locally or in the cloud, and if not, offer to create a new user.
+If the user moves the NFC tag from the reader while we try to write, warn them and try again.
+Then write the information we got onto the NFC tag presented and add them to the local- and cloud database.
+Lastly, welcome them to the facility, or bid them farewell.
+"""
 def callback(_uuid: bytes) -> None:
     uuid = _uuid.hex()
     if uuid not in database and not get_user_from_database(uuid):
@@ -18,7 +27,7 @@ def callback(_uuid: bytes) -> None:
         if choice.lower() not in ["y", "yes", "ye"]:
             return
         
-        new_user = user_manager.create_user()
+        new_user = user_manager.configure_user()
         if new_user is None:
             return
         
@@ -30,15 +39,10 @@ def callback(_uuid: bytes) -> None:
         #The UUID's hex value is converted into bytes, which is written onto the NFC tag.
         nfc_reader.write_data(bytes.fromhex(new_user.uuid))
         database[new_user.uuid] = new_user
-        # print("Select a user")
-        # for i, user in enumerate(list(users.keys())):
-        #     print(f"{i}: {user}")
-        # index = int(input("Type in the number of the user you want to select."))
         
         print("Finished.")
         return
           
-    
     #If the user is not present in the database, the default value will be "False".
     database[uuid].inside_facility = not database[uuid].inside_facility # Reverse the current status of the client who tagged their NFC tag, meaning that
                                                                         #if they were present, they left, and vice versa.
@@ -46,12 +50,12 @@ def callback(_uuid: bytes) -> None:
         print(f"Welcome {database[uuid].first_name}!" if database[uuid].inside_facility else f"Have a nice day {database[uuid].first_name}, see you soon!")
     else:
         print(f"Presence update failed for {database[uuid].first_name}.", file=stderr)
-    # response = requests.put(api, json = database)
-    # print(f"Server Response: {response.json()}")
 
+"""
+Get the user from the DynamoDB database and save them locally to prevent unnecessary API calls.
+"""
 def get_user_from_database(uuid: str) -> bool:
     user = user_manager.get_user(uuid)
-    #print(user)
     if user is None:
         return False
     database[user.uuid] = user

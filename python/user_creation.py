@@ -21,10 +21,17 @@ class User:
 
     
 class User_manager:
+    """
+    Initalize the class with the API key that we use in the API class (refer to "api.py") and hard-code the DynamoDB table name.
+    """
     def __init__(self, api_key: str) -> None:
         self.client = Api(api_key)
         self.table_name = "KapU_DB"
 
+    """
+    Create a static method that reads in the API key from the "aws_access" file.
+    I made this static so that this method can be used without an initialised intance of the "User_manager" class.
+    """
     @staticmethod
     def load_access(file_path: str) -> "User_manager":
         if not path.exists(file_path):
@@ -33,7 +40,11 @@ class User_manager:
             data = fp.read(-1).split("\n")
             return User_manager(api_key=data[0])
 
-    def create_user(self) -> Union[User, None]:
+    """
+    Generate a User from user input, including a unique user identifier, then save the user to DynamoDB.
+    Since saving the user could fail, I made sure to catch this error and either return the User or None (Union).
+    """
+    def configure_user(self) -> Union[User, None]:
         first_name = input("Please enter the customer's First Name: ")
         last_name = input("Please enter the customer's Last Name: ")
         email = input("Please enter the customer's email: ")
@@ -46,22 +57,29 @@ class User_manager:
         print("User creation failed", file=stderr)
         return None
         
-
+    """
+    Save the created User to DynamoDB via the API class.
+    """
     #https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/dynamodb/client/put_item.html
     def save_user(self, user: User) -> bool:
-        return self.client.create_user({
-            "TableName": self.table_name,
-            "Item": {
-                "uuid": user.uuid,
-                "first_name": user.first_name,
-                "last_name": user.last_name,
-                "email": user.email,
-                "phone_number": user.phone_number,
-                "active_subscription": user.active_subscription,
-                "inside_facility": user.inside_facility
+        return self.client.create_user(
+            {
+                "TableName": self.table_name,
+                "Item": {
+                    "uuid": user.uuid,
+                    "first_name": user.first_name,
+                    "last_name": user.last_name,
+                    "email": user.email,
+                    "phone_number": user.phone_number,
+                    "active_subscription": user.active_subscription,
+                    "inside_facility": user.inside_facility
+                }
             }
-        })
+        )
 
+    """
+    Update the presence of the User on DynamoDB if they entered or left the facility.
+    """
     def update_user_presence(self, user: User) -> bool:
         return self.client.update_user(
             user.uuid,
@@ -73,6 +91,9 @@ class User_manager:
             }
         )
     
+    """
+    Get the specific User from DynamoDB based on their UUID. 
+    """
     def get_user(self, uuid: str) -> Union[User, None]:
         response = self.client.get_user_by_id(uuid)
         if "Items" not in response or len(response["Items"]) != 1:
