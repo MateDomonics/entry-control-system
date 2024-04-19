@@ -9,15 +9,52 @@ The project utilizes a Raspberry Pi, along with a PN532 NFC Scanner module to sc
 
 ## User Setup
 
+### Raspberry Setup
+
+1. Run the following commands to set up your Raspberry Pi:
+```sudo apt update ; sudo apt upgrade -y```
+
+2. Turn on I2C on your Rapsberry Pi.
+```sudo raspi-config```:
+
+    ```Interfacing Options > I2C > Yes```
+
+3. Install the dependent packages for I2C:
+```sudo apt-get install libusb-dev libpcsclite-dev i2c-tools```
+
+4. Reboot the Raspberry Pi:
+```sudo reboot```
+
+### Hardware Setup
+
+1. Set the dip switches on the PN532 NFC HAT to correspond with the table below:
+
+    |      | OFF | ON |
+    |:----:|:---:|:--:|
+    | SCK  |  X  |    |
+    | MISO |  X  |    |
+    | MOSI |  X  |    |
+    | NSS  |  X  |    |
+    | SCL  |     |  X |
+    | SDA  |     |  X |
+    | RX   |  X  |    |
+    | TX   |  X  |    |
+
+2. Set the jumpers according to the table below, based on I2C:
+
+    |      | I1  | I0  |
+    |:----:|:---:|:---:|
+    | UART |  L  |  L  |
+    | I2C  |  L  |  H  |
+    | SPI  |  H  |  L  |
+
+### Software Setup
+
 1. Clone the repository onto a Raspberry Pi which has been set up with the capability to run a PN532 NFC HAT Module.
-2. Run the `start` bash script, which will initialise a python virtual environment and run the program automatically.
-
-## Developer Setup
-
-This project is being developed on Windows, using WSL (Windows Subsystem for Linux) and VSC (Visual Studio Code).
-
-1. Download WSL, clone the repo and open up the repo's directory in WSL.
-2. Run the `code` command in the directory to start VSC using WSL in the directory.
+```git clone https://github.com/MateDomonics/entry-control-system.git```
+2. Navigate into the ```entry-control-system``` folder.
+3. Create a file called ```aws_access``` in the root folder of the project and place your API key into it.
+4. Run the `start.sh` bash script, which will check for updates on GitHub, initialise a python virtual environment, fulfill dependencies and run the program automatically.
 
 ## Developer Log
 
@@ -41,7 +78,7 @@ This project is being developed on Windows, using WSL (Windows Subsystem for Lin
 
 TO-DO:
 
-- Can't scan NFC tag that came with Raspberry Pi.
+- Can't scan NFC tag that came with Raspberry Pi. &#x2714;
 
 ### February 9th, 2024
 
@@ -58,13 +95,56 @@ TO-DO:
 
 TO-DO:
 
-- Move on from using fake users to test writing and reading to actually using DynamoDB on AWS.
+- Move on from using fake users to test writing and reading to actually using DynamoDB on AWS. &#x2714;
+
+### February 25th, 2024
+
+- Made sure to NOT upload my AWS credentials to GitHub like an idiot.
+- Added the ability to create a new user on DynamoDB using the program.
+- Added the ability to get a user from DynamoDB.
+- Tried to implement the ability to update a user on DynamoDB. (Doesn't work yet.)
+- Fixed a GPIO warning that was thrown everytime because no cleanup was done.
+- Reduced print statements to prepare for a "release build".
+
+TO-DO:
+
+- Boto3 documentation is absolutely shocking, so the update method still doesn't work. Try figure it out. &#x2714;
+
+### April 5th, 2024
+
+Developer Note: Don't be scared by the huge gap in commits, most of my time was spent trying to figure out how Cognito User Pools worked before I realised that it's useless and I'm better off using API keys. Thank you John for pulling me out of that cursed rabbit hole.
+
+- Moved away from Boto3 to make use of API Gateway and Lambda Functions
+- Also moved away from using AWS Access Keys and Secret Access Keys to using an API Key.
+- Created new class ```api.py```, where the REST API calls are constructed.
+- Changed the ```user_creation.py``` class to accommodate for the new API.
+
+TO-DO:
+
+- Test the new API and make sure everything works as expected. &#x2714;
+- Update may still not work, make sure to test it. &#x2714;
+
+### April 7th, 2024
+
+- Made sure the API fully works.
+- Automated the git pulling, venv creation, requirement downloading and updating script.
+- Added ```service.sh``` to help with running the program when I don't know the IP of the Pi (i.e. when I'm not at home).
+- **Minimum Viable Product Achieved**
+
+### April 19th, 2024
+
+- Cleaned up code by removing unnecessary comments or uncommented code.
+- Fixed README.md to include correct setup instructions.
+- Added clear, concise PyDoc documentation to every method.
+- Removed ```service.sh``` because trying to make this program into a service didn't work.
 
 ## Sources
 
 - [PN532-NFC-HAT GitHub Repository](https://github.com/soonuse/pn532-nfc-hat)
 
 Using parts of this github repo (pn532.py, i2c.py).
+
+This is the GitHub Repo that was used by the third-party Python library. I implemented it locally because the Python library refused to work, while also having too many unnecessary things in it that I didn't need (such as card emulation).
 
 - [FakeRPi GitHub Repository](https://github.com/sn4k3/FakeRPi)
 
