@@ -105,6 +105,7 @@ Stop all the threads, join them back into the main thread and tell the user that
 """
 def stop() -> None:
     # Prevent multiple stop() calls.
+    global is_stopped
     if is_stopped:
         return
     
