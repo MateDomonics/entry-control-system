@@ -16,15 +16,14 @@ user_manager = User_manager.load_access(path.join(path.dirname(path.dirname(__fi
 
 """
 This is the method that gets run when we detect an NFC tag.
-Check if the user we found on the NFC tag is present locally or in the cloud, and if not, offer to create a new user.
-If the user moves the NFC tag from the reader while we try to write, warn them and try again.
-Then write the information we got onto the NFC tag presented and add them to the local- and cloud database.
-Lastly, welcome them to the facility, or bid them farewell.
+Check if the user we found on the NFC tag is present locally or in the cloud. If user is not present, call the "create_new_user" function.
+Confirm that the user being scanned has an active subscription. If not, tell them when the subscription expired.
+Lastly, if they have a valid subscription, call the "update_user_presence" function.
 """
 def callback(_uuid: bytes) -> None:
     uuid = _uuid.hex()
     if uuid not in database and not get_user_from_database(uuid):
-        configure_new_user()
+        create_new_user()
         return
     
     if not database[uuid].validate_subscription():
@@ -43,7 +42,13 @@ def get_user_from_database(uuid: str) -> bool:
     database[user.uuid] = user
     return True
 
-def configure_new_user() -> None:
+"""
+User configuration.
+Offer to create a new user.
+If the user moves the NFC tag from the reader while we try to write, warn them and try again.
+Then write the information we got onto the NFC tag presented and add them to the local- and cloud database.
+"""
+def create_new_user() -> None:
     choice = input("Unknown card. Do you want to create a new user? (y/n)")
     
     if choice.lower() not in ["y", "yes", "ye"]:
@@ -59,12 +64,14 @@ def configure_new_user() -> None:
     #The UUID's hex value is converted into bytes, which is written onto the NFC tag.
     write_success = nfc_reader.write_data(bytes.fromhex(new_user.uuid))
     
+    # Error handling if we couldn't write to the NFC tag.
     if not write_success:
         print("Couldn't write to card or writing to card was interrupted, please try again.", file=stderr)
         return
     
     save_success = user_manager.save_user(new_user)
-        
+    
+    # Error handling if we couldn't upload to AWS.
     if not save_success:
         print("Couldn't upload to AWS, please try again.", file=stderr)
         return
@@ -72,7 +79,11 @@ def configure_new_user() -> None:
     database[new_user.uuid] = new_user
     print("Finished.")
     return
-    
+
+"""
+Send an update to the local- and cloud database that the user has left or entered the facility.
+Depending on the state of the user, welcome them or bid them farewell.
+"""
 def update_user_presence(uuid: str) -> None:
     #If the user is not present in the database, the default value will be "False".
     database[uuid].inside_facility = not database[uuid].inside_facility # Reverse the current status of the client who tagged their NFC tag, meaning that

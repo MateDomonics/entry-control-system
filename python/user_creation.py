@@ -21,6 +21,10 @@ class User:
     def __str__(self) -> str:
         return f"uuid: {self.uuid}, is inside: {self.inside_facility}"
     
+    """
+    Check if the current User's subscription expiry date is larger than the current date.
+    If it is, they have a valid subscription, so return true. Otherwise, false.
+    """
     def validate_subscription(self) -> bool:
         current_date = datetime.now().timestamp()
         return self.active_subscription > current_date
