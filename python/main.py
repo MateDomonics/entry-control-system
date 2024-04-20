@@ -23,33 +23,10 @@ Lastly, welcome them to the facility, or bid them farewell.
 def callback(_uuid: bytes) -> None:
     uuid = _uuid.hex()
     if uuid not in database and not get_user_from_database(uuid):
-        choice = input("Unknown card. Do you want to create a new user? (y/n)")
-        if choice.lower() not in ["y", "yes", "ye"]:
-            return
-        
-        new_user = user_manager.configure_user()
-        if new_user is None:
-            return
-        
-        if not nfc_reader.is_same_card_present():
-            print("Please keep the card on the reader.")
-            while not nfc_reader.is_same_card_present():
-                pass
-
-        #The UUID's hex value is converted into bytes, which is written onto the NFC tag.
-        nfc_reader.write_data(bytes.fromhex(new_user.uuid))
-        database[new_user.uuid] = new_user
-        
-        print("Finished.")
+        configure_new_user()
         return
-          
-    #If the user is not present in the database, the default value will be "False".
-    database[uuid].inside_facility = not database[uuid].inside_facility # Reverse the current status of the client who tagged their NFC tag, meaning that
-                                                                        #if they were present, they left, and vice versa.
-    if user_manager.update_user_presence(database[uuid]):
-        print(f"Welcome {database[uuid].first_name}!" if database[uuid].inside_facility else f"Have a nice day {database[uuid].first_name}, see you soon!")
-    else:
-        print(f"Presence update failed for {database[uuid].first_name}.", file=stderr)
+    
+    update_user_presence(uuid)
 
 """
 Get the user from the DynamoDB database and save them locally to prevent unnecessary API calls.
@@ -60,6 +37,45 @@ def get_user_from_database(uuid: str) -> bool:
         return False
     database[user.uuid] = user
     return True
+
+def configure_new_user() -> None:
+    choice = input("Unknown card. Do you want to create a new user? (y/n)")
+    
+    if choice.lower() not in ["y", "yes", "ye"]:
+        return
+    
+    new_user = user_manager.configure_user()
+    
+    if not nfc_reader.is_same_card_present():
+        print("Please keep the card on the reader.")
+        while not nfc_reader.is_same_card_present():
+            pass
+
+    #The UUID's hex value is converted into bytes, which is written onto the NFC tag.
+    write_success = nfc_reader.write_data(bytes.fromhex(new_user.uuid))
+    
+    if write_success:
+        save_success = user_manager.save_user(new_user)
+        
+        if save_success:
+            database[new_user.uuid] = new_user
+            print("Finished.")
+            return
+    
+        print("Couldn't upload to AWS, please try again.", file=stderr)
+        return
+    
+    print("Couldn't write to card, please try again.", file=stderr)
+    return
+
+def update_user_presence(uuid: str) -> None:
+    #If the user is not present in the database, the default value will be "False".
+    database[uuid].inside_facility = not database[uuid].inside_facility # Reverse the current status of the client who tagged their NFC tag, meaning that
+                                                                        #if they were present, they left, and vice versa.
+    if user_manager.update_user_presence(database[uuid]):
+        print(f"Welcome {database[uuid].first_name}!" if database[uuid].inside_facility else f"Have a nice day {database[uuid].first_name}, see you soon!")
+    else:
+        print(f"Presence update failed for {database[uuid].first_name}.", file=stderr)
 
 if __name__ == "__main__":
     nfc_reader = Nfc(callback)

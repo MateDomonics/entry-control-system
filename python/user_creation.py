@@ -44,7 +44,7 @@ class User_manager:
     Generate a User from user input, including a unique user identifier, then save the user to DynamoDB.
     Since saving the user could fail, I made sure to catch this error and either return the User or None (Union).
     """
-    def configure_user(self) -> Union[User, None]:
+    def configure_user(self) -> User:
         first_name = input("Please enter the customer's First Name: ")
         last_name = input("Please enter the customer's Last Name: ")
         email = input("Please enter the customer's email: ")
@@ -52,10 +52,7 @@ class User_manager:
         #UUID generates a UUID object, which is then converted into a hexadecimal number.
         user = User(uuid4().hex, first_name, last_name, email, phone_number, active_subscription=True)
         print(f"User Created: {user}")
-        if self.save_user(user):
-            return user
-        print("User creation failed", file=stderr)
-        return None
+        return user
         
     """
     Save the created User to DynamoDB via the API class.

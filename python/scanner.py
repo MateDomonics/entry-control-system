@@ -109,13 +109,14 @@ class Nfc:
     Again, authenticate the card to allow access, then make sure the user knows the risk of overwriting data on an NFC tag.
     Once confirmed, write the data to memory block 4.
     """
-    def write_data(self, data: bytes) -> None:
+    def write_data(self, data: bytes) -> bool:
         if not self.authenticate_card(Nfc.DEFAULT_BLOCK_NUMBER):
-            return
+            return False
         choice = str(input("Are you sure you want to continue? \033[91mTHIS WILL ERASE DATA FROM THE CARD.\033[0m (y/[n])") or "n")
         if choice.lower() not in ["y", "yes", "ye"]:
-            return
+            return False
         self.nfc.mifare_classic_write_block(Nfc.DEFAULT_BLOCK_NUMBER, data)
+        return True
         
     """
     Authenticate the MIFARE cards, due to issues with accessing the memory on them for reading and writing.
