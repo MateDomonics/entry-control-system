@@ -1,56 +1,20 @@
-from dataclasses import dataclass, field
-from typing import Optional, Union
+from typing import Union
 from uuid import uuid4
 from api import Api
-from os import path
-from sys import stderr
 from datetime import datetime, timedelta
 from time import mktime
-
-@dataclass()
-class User:
-    uuid: str
-    first_name: str
-    last_name: str
-    email: str
-    phone_number: str
-    active_subscription: float
-    #https://stackoverflow.com/questions/68874635/why-is-my-python-dataclass-not-initialising-boolean-correctly
-    inside_facility: Optional[bool] = field(default=False)
-
-    def __str__(self) -> str:
-        return f"uuid: {self.uuid}, is inside: {self.inside_facility}"
-    
-    """
-    Check if the current User's subscription expiry date is larger than the current date.
-    If it is, they have a valid subscription, so return true. Otherwise, false.
-    """
-    def validate_subscription(self) -> bool:
-        current_date = datetime.now().timestamp()
-        return self.active_subscription > current_date
-
+from user import User
     
 class User_manager:
     """
     Initalize the class with the API key that we use in the API class (refer to "api.py") and hard-code the DynamoDB table name.
     """
-    def __init__(self, api_key: str) -> None:
-        self.client = Api(api_key)
+    def __init__(self, api: Api) -> None:
+        self.client = api
         self.table_name = "KapU_DB"
 
     """
-    Create a static method that reads in the API key from the "aws_access" file.
-    I made this static so that this method can be used without an initialised intance of the "User_manager" class.
-    """
-    @staticmethod
-    def load_access(file_path: str) -> "User_manager":
-        if not path.exists(file_path):
-            raise FileNotFoundError("Couldn't create User Manager. File not found.")
-        with open(file_path, "r") as fp:
-            data = fp.read(-1).split("\n")
-            return User_manager(api_key=data[0])
-
-    """
+    CHANGE LATER
     Generate a User from user input, including a unique user identifier, then save the user to DynamoDB.
     Since saving the user could fail, I made sure to catch this error and either return the User or None (Union).
     """

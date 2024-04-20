@@ -88,10 +88,7 @@ class Nfc:
     """
     def stop(self) -> None:
         self.stop_event.set()
-        #Main thread tries to join the side thread. When successful, we are certain that the side thread stopped, therefore we are no longer polling.
-        self.thread.join()
         self.nfc.cleanup()
-        print("Program Finished.")
 
     """
     Read in the data present on the NFC tag.

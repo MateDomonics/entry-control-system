@@ -137,6 +137,7 @@ TO-DO:
 - Fixed README.md to include correct setup instructions.
 - Added clear, concise PyDoc documentation to every method.
 - Removed ```service.sh``` because trying to make this program into a service didn't work.
+- Merged from branch ```api-integration``` to ```main``` branch and made a new release.
 
 ## Sources
 

@@ -1,6 +1,8 @@
 from typing import List, Dict, Any
 import requests
 import json
+from user import User
+from os import path
 endpoint_url = "https://fl5loc5z14.execute-api.eu-west-1.amazonaws.com/Test"
 
 """
@@ -15,11 +17,23 @@ class Api:
         self.api_key = api_key
     
     """
+    Create a static method that reads in the API key from the "aws_access" file.
+    I made this static so that this method can be used without an initialised intance of the "User_manager" class.
+    """
+    @staticmethod
+    def load_access(file_path: str) -> "Api":
+        if not path.exists(file_path):
+            raise FileNotFoundError("Couldn't access API credentials. File not found.")
+        with open(file_path, "r") as fp:
+            data = fp.read(-1).split("\n")
+            return Api(api_key=data[0])
+    
+    """
     GET all the users from the database and decode the returned JSON string into a dictionary.
     """
-    def get_user_ids(self) -> List[str]:
+    def get_users(self) -> List[Dict[str, Any]]:
         response = requests.get(endpoint_url, headers={"x-api-key":self.api_key})
-        return json.loads(response.text)
+        return json.loads(response.text)["Items"]
     
     """
     PUT a new user onto the database using a payload that is a JSON string formed from a dictionary.
