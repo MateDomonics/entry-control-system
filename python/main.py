@@ -54,20 +54,20 @@ def configure_new_user() -> None:
     #The UUID's hex value is converted into bytes, which is written onto the NFC tag.
     write_success = nfc_reader.write_data(bytes.fromhex(new_user.uuid))
     
-    if write_success:
-        save_success = user_manager.save_user(new_user)
-        
-        if save_success:
-            database[new_user.uuid] = new_user
-            print("Finished.")
-            return
+    if not write_success:
+        print("Couldn't write to card or writing to card was interrupted, please try again.", file=stderr)
+        return
     
+    save_success = user_manager.save_user(new_user)
+        
+    if not save_success:
         print("Couldn't upload to AWS, please try again.", file=stderr)
         return
     
-    print("Couldn't write to card, please try again.", file=stderr)
+    database[new_user.uuid] = new_user
+    print("Finished.")
     return
-
+    
 def update_user_presence(uuid: str) -> None:
     #If the user is not present in the database, the default value will be "False".
     database[uuid].inside_facility = not database[uuid].inside_facility # Reverse the current status of the client who tagged their NFC tag, meaning that
