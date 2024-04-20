@@ -4,6 +4,8 @@ from uuid import uuid4
 from api import Api
 from os import path
 from sys import stderr
+from datetime import datetime, timedelta
+from time import mktime
 
 @dataclass()
 class User:
@@ -12,12 +14,16 @@ class User:
     last_name: str
     email: str
     phone_number: str
-    active_subscription: bool
+    active_subscription: float
     #https://stackoverflow.com/questions/68874635/why-is-my-python-dataclass-not-initialising-boolean-correctly
     inside_facility: Optional[bool] = field(default=False)
 
     def __str__(self) -> str:
         return f"uuid: {self.uuid}, is inside: {self.inside_facility}"
+    
+    def validate_subscription(self) -> bool:
+        current_date = datetime.now().timestamp()
+        return self.active_subscription > current_date
 
     
 class User_manager:
@@ -49,8 +55,20 @@ class User_manager:
         last_name = input("Please enter the customer's Last Name: ")
         email = input("Please enter the customer's email: ")
         phone_number = input("Please enter the customer's Phone Number: ")
+        
+        sub_length = None
+        while sub_length is None:
+            try:
+                sub_length = int(input("Please enter the customer's subscription plan [Inputted value is considered in number of months]: "))
+            except ValueError:
+                print("Please only input a number for the subscription length.")
+
+        # Take the current date, add the amount of months inputted above, and then turn it into a timestamp.
+        end_of_sub = mktime((datetime.now().date() + timedelta(days=(sub_length*30))).timetuple())
+        print(f"Subscription will expire at: {datetime.fromtimestamp(end_of_sub)}")
+        
         #UUID generates a UUID object, which is then converted into a hexadecimal number.
-        user = User(uuid4().hex, first_name, last_name, email, phone_number, active_subscription=True)
+        user = User(uuid4().hex, first_name, last_name, email, phone_number, end_of_sub)
         print(f"User Created: {user}")
         return user
         

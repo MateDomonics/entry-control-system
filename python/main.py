@@ -4,6 +4,7 @@ import atexit
 from os import path
 from user_creation import User_manager, User
 from sys import stderr
+from datetime import datetime
 
 #Key value pair where the key is the user's ID and the value shows whether they are present at the "venue" or not.
 #This is the "local database". For production, I would install a NoSQL database locally as a Docker Image and interact with that.
@@ -26,6 +27,10 @@ def callback(_uuid: bytes) -> None:
         configure_new_user()
         return
     
+    if not database[uuid].validate_subscription():
+        print(f"Your subscription has expired at {datetime.fromtimestamp(database[uuid].active_subscription)} , please contact a member of staff for assistance.")
+        return
+            
     update_user_presence(uuid)
 
 """
