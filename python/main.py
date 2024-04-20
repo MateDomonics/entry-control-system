@@ -126,7 +126,7 @@ if __name__ == "__main__":
     try:
         while True:
             # Wait for the user to press ENTER in order to generate the plot based on the statistics.
-            input("Press RETURN to see statistics")
+            input("Press RETURN to see statistics\n")
             gatherer.generate_plot()
     except KeyboardInterrupt:
         stop()

@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import List
+from typing import List, Dict, Any
 from api import Api
 from os import path
 import json
@@ -11,6 +11,13 @@ import matplotlib as plt
 class Statistic:
     timestamp: float
     users_inside_facility: int
+    
+    """
+    Create a suitable dictionary that represents this class.
+    Made because JSON couldn't parse this class by itself.
+    """
+    def to_json(self) -> Dict[str, Any]:
+        return {"timestamp": self.timestamp, "users_inside_facility": self.users_inside_facility}
     
     
 class Gatherer:
@@ -37,7 +44,7 @@ class Gatherer:
     """
     def save_statistics(self) -> None:
         with open(self.filepath, "w") as fp:
-            json.dump([x.__dict__ for x in self.statistics], fp)
+            json.dump([x.to_json() for x in self.statistics], fp)
     
     """
     Get the list of users from the online database. If none are present, return.
