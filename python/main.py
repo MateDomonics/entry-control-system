@@ -2,8 +2,7 @@ from typing import Dict
 from scanner import Nfc
 import atexit
 from os import path
-from user_creation import User_manager
-from user import User
+from user_creation import User_manager, User
 from sys import stderr
 from datetime import datetime
 from api import Api
@@ -12,6 +11,7 @@ from statistic_gatherer import Gatherer
 #Key value pair where the key is the user's ID and the value shows whether they are present at the "venue" or not.
 #This is the "local database". For production, I would install a NoSQL database locally as a Docker Image and interact with that.
 database: Dict[str, User] = {}
+is_stopped = False
 nfc_reader:Nfc = None
 
 #Use the current python file's location to find the "aws_access" file which is one level above the python file.
@@ -100,12 +100,21 @@ def update_user_presence(uuid: str) -> None:
     else:
         print(f"Presence update failed for {database[uuid].first_name}.", file=stderr)
 
+"""
+Stop all the threads, join them back into the main thread and tell the user that the program finished.
+"""
 def stop() -> None:
+    # Prevent multiple stop() calls.
+    if is_stopped:
+        return
+    
     print("Stopping program...")
     nfc_reader.stop()
     gatherer.stop()
     nfc_reader.thread.join()
     gatherer.thread.join()
+    
+    is_stopped = True
     print("Program Finished.")
 
 if __name__ == "__main__":
@@ -116,6 +125,7 @@ if __name__ == "__main__":
     atexit.register(stop)
     try:
         while True:
+            # Wait for the user to press ENTER in order to generate the plot based on the statistics.
             input("Press RETURN to see statistics")
             gatherer.generate_plot()
     except KeyboardInterrupt:

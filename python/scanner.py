@@ -69,7 +69,7 @@ class Nfc:
         return self.previousId == self.nfc.read_passive_target(timeout=1)
 
     """
-    Start the main loop by clearing the "stop_event" Event. The main loop listens for NFC tags on its own, individual CPU thread.
+    Start the loop by clearing the "stop_event" Event. The loop listens for NFC tags on its own, individual CPU thread.
     If we didn't assign a thread, other parts of the program wouldn't function until the main loop finishes.
     """
     def start(self) -> None:
@@ -82,7 +82,7 @@ class Nfc:
         self.thread.start()
 
     """
-    Stop the main loop by setting the "stop_event" Event.
+    Stop the loop by setting the "stop_event" Event.
     I also wait for the CPU thread to die and then cleanup the General Purpose Input/Output pins.
     This is done to prevent warnings from popping up and to signal to the OS that those pins are no longer in use.
     """

@@ -139,6 +139,14 @@ TO-DO:
 - Removed ```service.sh``` because trying to make this program into a service didn't work.
 - Merged from branch ```api-integration``` to ```main``` branch and made a new release.
 
+### April 20th, 2024
+
+- Moved API creation from ```user_management``` to ```main``` due to multiple usages of the API.
+- Created ```statistic_gatherer.py```, which gathers statistics, saves them to a file and can generate a plot.
+- Added ```matplotlib``` as a dependency for plot generation.
+- Better threading to handle NFC reading and statistic gathering at the same time.
+- Fixed .gitignore to include the new ```statistics``` file.
+
 ## Sources
 
 - [PN532-NFC-HAT GitHub Repository](https://github.com/soonuse/pn532-nfc-hat)

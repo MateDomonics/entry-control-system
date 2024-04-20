@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import List, Any
+from typing import List
 from api import Api
 from os import path
 import json
@@ -37,12 +37,13 @@ class Gatherer:
     """
     def save_statistics(self) -> None:
         with open(self.filepath, "w") as fp:
-            json.dump(self.statistics, fp)
+            json.dump([x.__dict__ for x in self.statistics], fp)
     
     """
     Get the list of users from the online database. If none are present, return.
     If there are users present, check whether they are inside the facility or not. If they are, increment a counter.
-    Once we counted all the users who are present, create an instance of the "Statistics" class where we set the current time and the number of users who are present.
+    Once we counted all the users who are present,
+    create an instance of the "Statistics" class where we set the current time and the number of users who are present.
     """
     def create_statistic(self) -> None:
         users = self.api.get_users()
@@ -76,8 +77,7 @@ class Gatherer:
             self.save_statistics()
             
     """
-    Start the main loop by clearing the "stop_event" Event. The main loop listens for NFC tags on its own, individual CPU thread.
-    If we didn't assign a thread, other parts of the program wouldn't function until the main loop finishes.
+    Start the loop by clearing the "stop_event" Event. The statistic gathering thread gathers statistics on its own, individual CPU thread.
     """
     def start(self) -> None:
         self.stop_event.clear()
@@ -89,9 +89,7 @@ class Gatherer:
         self.thread.start()
 
     """
-    Stop the main loop by setting the "stop_event" Event.
-    I also wait for the CPU thread to die and then cleanup the General Purpose Input/Output pins.
-    This is done to prevent warnings from popping up and to signal to the OS that those pins are no longer in use.
+    Stop the loop by setting the "stop_event" Event.
     """
     def stop(self) -> None:
         self.stop_event.set()

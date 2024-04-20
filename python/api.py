@@ -1,7 +1,6 @@
 from typing import List, Dict, Any
 import requests
 import json
-from user import User
 from os import path
 endpoint_url = "https://fl5loc5z14.execute-api.eu-west-1.amazonaws.com/Test"
 
