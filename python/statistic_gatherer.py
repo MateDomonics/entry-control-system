@@ -36,7 +36,7 @@ class Gatherer:
         if not path.exists(filepath):
             return Gatherer(api, [], filepath)
         with open(filepath, "r") as fp:
-            data = [Statistic(x["timestamp"], x["user_inside_facility"]) for x in json.load(fp)]
+            data = [Statistic(x["timestamp"], x["users_inside_facility"]) for x in json.load(fp)]
             return Gatherer(api, data, filepath)
     
     """
