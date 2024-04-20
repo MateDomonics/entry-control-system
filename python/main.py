@@ -109,7 +109,7 @@ def stop() -> None:
     if is_stopped:
         return
     
-    print("Stopping program...")
+    print("\nStopping program...")
     nfc_reader.stop()
     gatherer.stop()
     nfc_reader.thread.join()

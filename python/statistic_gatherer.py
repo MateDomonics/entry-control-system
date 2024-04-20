@@ -5,7 +5,7 @@ from os import path
 import json
 from datetime import datetime
 from threading import Event, Thread
-import matplotlib as plt
+import matplotlib.pyplot as plt
 
 @dataclass
 class Statistic:
@@ -80,6 +80,10 @@ class Gatherer:
             # Wait the previously found time in seconds.
             self.stop_event.wait(td.total_seconds())
             
+            # If the program stopped due to us quitting, quit the function to prevent statistic gathering.
+            if self.stop_event.is_set():
+                return
+            
             self.create_statistic()
             self.save_statistics()
             
@@ -100,6 +104,8 @@ class Gatherer:
     """
     def stop(self) -> None:
         self.stop_event.set()
+        # Do another save just in case the program didn't save the first time around.
+        self.save_statistics()
                 
     """
     Generate the plot from the statistics we found.
