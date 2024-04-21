@@ -58,7 +58,7 @@ class Gatherer:
     create an instance of the "Statistics" class where we set the current time and the number of users who are present at this time.
     """
     def create_statistic(self) -> None:
-        users = self.api.get_users(self, self.table_name)
+        users = self.api.get_users(self.table_name)
         if len(users) == 0:
             return
         
@@ -135,3 +135,11 @@ class Gatherer:
 
         # function to show the plot
         plt.show()
+
+if __name__ == "__main__":
+    def main() -> None:
+        datastore = path.join(path.dirname(path.dirname(__file__)), "data")
+        gatherer = Gatherer.from_file(None, path.join(datastore, "statistics"), None)
+        gatherer.generate_plot()
+        
+    main()

@@ -54,5 +54,12 @@ source venv/bin/activate
 #Update dependencies and run "main.py"
 pip install -r dependencies.txt --upgrade
 cd python
-python main.py
+if [ "$1" == "main" ]
+then
+    python main.py
+elif [ "$1" == "plot" ]
+then
+    python statistic_gatherer.py
+fi
+
 deactivate

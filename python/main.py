@@ -127,10 +127,3 @@ if __name__ == "__main__":
     gatherer.start()
     #Registers an event handler to an exit signal (Ctrl + c)
     atexit.register(stop)
-    try:
-        while True:
-            # Wait for the user to press ENTER in order to generate the plot based on the statistics.
-            input("Press RETURN to see statistics\n")
-            gatherer.generate_plot()
-    except KeyboardInterrupt:
-        stop()

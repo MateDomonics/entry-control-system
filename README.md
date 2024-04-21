@@ -148,6 +148,15 @@ TO-DO:
 - Better threading to handle NFC reading and statistic gathering at the same time.
 - Fixed .gitignore to include the new ```statistics``` file.
 
+### April 21st, 2024
+
+- Fixing PyDoc across project.
+- Removed hard-coded table name to allow for multi-tenancy.
+- Updated README.md
+- Moved the files ```aws_access, environment and statistics``` to the ```data``` folder to clean up the project.
+- Added flow diagram to README.md.
+- Merged ```statistics-gathering``` branch to ```main``` and made a new release.
+
 ## Flow Diagram
 
 ![Flow Diagram](screenshots/flow_diagram.png)
