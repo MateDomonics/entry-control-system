@@ -27,8 +27,8 @@ class Api:
     """
     GET all the users from the database and decode the returned JSON string into a dictionary.
     """
-    def get_users(self) -> List[Dict[str, Any]]:
-        response = requests.get(endpoint_url, headers={"x-api-key":self.api_key})
+    def get_users(self, table_name: str) -> List[Dict[str, Any]]:
+        response = requests.get(endpoint_url, headers={"x-api-key":self.api_key, "table_name": table_name})
         return json.loads(response.text)["Items"]
     
     """
@@ -42,8 +42,8 @@ class Api:
     """
     GET a user based on their UUID and decode the returned JSON string into a dictionary.
     """
-    def get_user_by_id(self, uuid: str) -> Dict[str, Any]:
-        response = requests.get("/".join([endpoint_url, uuid]), headers={"x-api-key":self.api_key})
+    def get_user_by_id(self, uuid: str, table_name: str) -> Dict[str, Any]:
+        response = requests.get("/".join([endpoint_url, uuid]), headers={"x-api-key":self.api_key, "table_name": table_name})
         return json.loads(response.text)
 
     """
