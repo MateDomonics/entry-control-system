@@ -2,10 +2,15 @@
 
 ## Summary
 
-This is the GitHub Repository for KapU, a Fourth Year Project developed by Máté Domonics, studying at SETU Waterford.
-The project utilizes a Raspberry Pi, along with a PN532 NFC Scanner module to scan NFC tags and interact with a DynamoDB Database to check if a customer's UID is present.
+This is the GitHub Repository for KapU, a Fourth Year Project developed by Máté Domonics, studying at SETU Waterford. The project is an entry-control system, allowing for adding users, updating their presence, and only allowing entry to users with a valid subscription. Additionally, a graph can be presented to see the amount of users present in the facility at a given time, aiding with data analysis.
 
-[Official GitHub Pages Website](https://matedomonics.github.io/entry-control-system/)
+The project utilizes a Raspberry Pi that scans an NFC tag and gains info from it. Additionally, the project also writes to NFC tags when prompted, therefore caution should be practiced when running this program near any card or device that has NFC capabilities.
+
+Using the information from the NFC tags, the project is integrated with an AWS API Gateway, which is connected to a Lambda Function. The API Gateway secures access to the Lambda Function via a REST API, and the Lambda Function interprets the different types of requests the program sends to the API Gateway and makes changes to the DynamoDB database accordingly.
+
+Once these are achieved, the program displays whether a user is allowed into the facility or not, depending on if they have a valid subscription.
+
+### [Official GitHub Pages Website](https://matedomonics.github.io/entry-control-system/)
 
 ## User Setup
 
