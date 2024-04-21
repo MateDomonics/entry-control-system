@@ -1,26 +1,37 @@
-from typing import Dict
+from typing import Dict, Union
 from scanner import Nfc
 import atexit
 from os import path
 from user_creation import User_manager, User
 from sys import stderr
 from datetime import datetime
+from api import Api
+from statistic_gatherer import Gatherer
 
 #Key value pair where the key is the user's ID and the value shows whether they are present at the "venue" or not.
 #This is the "local database". For production, I would install a NoSQL database locally as a Docker Image and interact with that.
 database: Dict[str, User] = {}
+is_stopped = False
 nfc_reader:Nfc = None
 
-#Use the current python file's location to find the "aws_access" file which is one level above the python file.
-user_manager = User_manager.load_access(path.join(path.dirname(path.dirname(__file__)), "aws_access"))
+#Use the current python file's location to find the supplementary files in the "data" folder.
+#These files define the API Key, the Table Name we are working on and the statistics generated about the facility.
+datastore = path.join(path.dirname(path.dirname(__file__)), "data")
+
+api = Api.from_file(path.join(datastore, "aws_access"))
+user_manager = User_manager.from_file(api, path.join(datastore, "environment"))
+gatherer = Gatherer.from_file(api, path.join(datastore, "statistics"))
 
 """
-This is the method that gets run when we detect an NFC tag.
+This is the method that runs when we detect an NFC tag.
 Check if the user we found on the NFC tag is present locally or in the cloud. If user is not present, call the "create_new_user" function.
 Confirm that the user being scanned has an active subscription. If not, tell them when the subscription expired.
 Lastly, if they have a valid subscription, call the "update_user_presence" function.
 """
-def callback(_uuid: bytes) -> None:
+def callback(_uuid: Union[bytes, None]) -> None:
+    if _uuid is None:
+        return
+    
     uuid = _uuid.hex()
     if uuid not in database and not get_user_from_database(uuid):
         create_new_user()
@@ -43,7 +54,6 @@ def get_user_from_database(uuid: str) -> bool:
     return True
 
 """
-User configuration.
 Offer to create a new user.
 If the user moves the NFC tag from the reader while we try to write, warn them and try again.
 Then write the information we got onto the NFC tag presented and add them to the local- and cloud database.
@@ -93,8 +103,34 @@ def update_user_presence(uuid: str) -> None:
     else:
         print(f"Presence update failed for {database[uuid].first_name}.", file=stderr)
 
+"""
+Stop all the threads, join them back into the main thread and tell the user that the program finished.
+"""
+def stop() -> None:
+    # Prevent multiple stop() calls.
+    global is_stopped
+    if is_stopped:
+        return
+    
+    print("\nStopping program...")
+    nfc_reader.stop()
+    gatherer.stop()
+    nfc_reader.thread.join()
+    gatherer.thread.join()
+    
+    is_stopped = True
+    print("Program Finished.")
+
 if __name__ == "__main__":
     nfc_reader = Nfc(callback)
     nfc_reader.start()
+    gatherer.start()
     #Registers an event handler to an exit signal (Ctrl + c)
-    atexit.register(nfc_reader.stop)
+    atexit.register(stop)
+    try:
+        while True:
+            # Wait for the user to press ENTER in order to generate the plot based on the statistics.
+            input("Press RETURN to see statistics\n")
+            gatherer.generate_plot()
+    except KeyboardInterrupt:
+        stop()

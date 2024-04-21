@@ -1,4 +1,4 @@
-from typing import Any, Callable, Union
+from typing import Callable, Union
 from pn532 import PN532_I2C, MIFARE_CMD_AUTH_B, PN532Error
 import time
 #https://www.pythontutorial.net/python-concurrency/python-threading/
@@ -17,7 +17,7 @@ class Nfc:
     Construct an instance of the "Nfc" class.
     Also call the SAM_configuration() function which sets the configuration for the NFC reader.
     """
-    def __init__(self, read_callback: Callable[[int], None]) -> None:
+    def __init__(self, read_callback: Callable[[Union[bytes, None]], None]) -> None:
         # FeliCa_card_detection.py
         self.read_callback = read_callback
         self.previousId = None
@@ -69,7 +69,7 @@ class Nfc:
         return self.previousId == self.nfc.read_passive_target(timeout=1)
 
     """
-    Start the main loop by clearing the "stop_event" Event. The main loop listens for NFC tags on its own, individual CPU thread.
+    Start the loop by clearing the "stop_event" Event. The loop listens for NFC tags on its own, individual CPU thread.
     If we didn't assign a thread, other parts of the program wouldn't function until the main loop finishes.
     """
     def start(self) -> None:
@@ -82,16 +82,13 @@ class Nfc:
         self.thread.start()
 
     """
-    Stop the main loop by setting the "stop_event" Event.
+    Stop the loop by setting the "stop_event" Event.
     I also wait for the CPU thread to die and then cleanup the General Purpose Input/Output pins.
     This is done to prevent warnings from popping up and to signal to the OS that those pins are no longer in use.
     """
     def stop(self) -> None:
         self.stop_event.set()
-        #Main thread tries to join the side thread. When successful, we are certain that the side thread stopped, therefore we are no longer polling.
-        self.thread.join()
         self.nfc.cleanup()
-        print("Program Finished.")
 
     """
     Read in the data present on the NFC tag.
@@ -101,7 +98,6 @@ class Nfc:
         if not self.authenticate_card(Nfc.DEFAULT_BLOCK_NUMBER):
             return None
         data = self.nfc.mifare_classic_read_block(block_number=Nfc.DEFAULT_BLOCK_NUMBER)
-        # print(f"Data from card: \n{[hex(i) for i in data]}")
         return data
 
     """
