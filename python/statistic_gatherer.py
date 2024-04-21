@@ -25,23 +25,24 @@ class Gatherer:
     """
     Initialize this class with an API, a list of statistics, the filepath for the statistics file and a stop event to close the loop.
     """
-    def __init__(self, api: Api, statistics: List[Statistic], filepath: str) -> None:
+    def __init__(self, api: Api, statistics: List[Statistic], filepath: str, table_name: str) -> None:
         self.api = api
         self.statistics = statistics
         self.filepath = filepath
         self.stop_event = Event()
+        self.table_name = table_name
     
     """
     Find the file "statistics". If it doesn't exist, create an instance of the "Gatherer" class with an empty data field.
     If found, read in the file contents as JSON and create an instance of the "Gatherer" class with the file's contents as its data field.
     """
     @staticmethod
-    def from_file(api: Api, filepath: str) -> "Gatherer":
+    def from_file(api: Api, filepath: str, table_name: str) -> "Gatherer":
         if not path.exists(filepath):
-            return Gatherer(api, [], filepath)
+            return Gatherer(api, [], filepath, table_name)
         with open(filepath, "r") as fp:
             data = [Statistic(x["timestamp"], x["users_inside_facility"]) for x in json.load(fp)]
-            return Gatherer(api, data, filepath)
+            return Gatherer(api, data, filepath, table_name)
     
     """
     Open the file found previously and dump our current list of statistics into it, overwriting the file in the process.
@@ -57,7 +58,7 @@ class Gatherer:
     create an instance of the "Statistics" class where we set the current time and the number of users who are present at this time.
     """
     def create_statistic(self) -> None:
-        users = self.api.get_users()
+        users = self.api.get_users(self, self.table_name)
         if len(users) == 0:
             return
         

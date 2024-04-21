@@ -113,7 +113,7 @@ class User_manager:
     Get the specific User from DynamoDB based on their UUID. 
     """
     def get_user(self, uuid: str) -> Union[User, None]:
-        response = self.client.get_user_by_id(uuid)
+        response = self.client.get_user_by_id(uuid, self.table_name)
         if "Items" not in response or len(response["Items"]) != 1:
             return None
         usable_response = response["Items"][0]

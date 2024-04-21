@@ -20,7 +20,7 @@ datastore = path.join(path.dirname(path.dirname(__file__)), "data")
 
 api = Api.from_file(path.join(datastore, "aws_access"))
 user_manager = User_manager.from_file(api, path.join(datastore, "environment"))
-gatherer = Gatherer.from_file(api, path.join(datastore, "statistics"))
+gatherer = Gatherer.from_file(api, path.join(datastore, "statistics"), user_manager.table_name)
 
 """
 This is the method that runs when we detect an NFC tag.
