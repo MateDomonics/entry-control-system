@@ -60,6 +60,8 @@ then
 elif [ "$1" == "plot" ]
 then
     python statistic_gatherer.py
+else
+    echo "Usage: bash start.sh [main/plot]"
 fi
 
 deactivate

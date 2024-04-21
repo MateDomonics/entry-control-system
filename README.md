@@ -53,9 +53,10 @@ The project utilizes a Raspberry Pi, along with a PN532 NFC Scanner module to sc
 1. Clone the repository onto a Raspberry Pi which has been set up with the capability to run a PN532 NFC HAT Module.
 ```git clone https://github.com/MateDomonics/entry-control-system.git```
 2. Navigate into the ```entry-control-system``` folder.
-3. Create a file called ```aws_access``` in the ```data``` folder of the project path and place your API key into it.
-4. Create a file called ```environment``` in the ```data``` folder of the project path and place the name of your table on DynamoDB into it **(Case- and spelling sensitive)**.
-5. Run the `start.sh` bash script, which will check for updates on GitHub, initialise a python virtual environment, fulfill dependencies and run the program automatically.
+3. Fill in the info for ```aws_access``` in the ```data``` folder of the project path and place your API key into it.
+4. Fill in the info for ```environment``` in the ```data``` folder of the project path and place the name of your table on DynamoDB into it **(Case- and spelling sensitive)**.
+5. Run the `start.sh` bash script with the following parameters: either ```main```  (start the NFC Reader) or ```plot``` (to plot statistics).
+    This will check for updates on GitHub, initialise a python virtual environment, fulfill dependencies and run the program automatically.
 
 ## Developer Log
 
