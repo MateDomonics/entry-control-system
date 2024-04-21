@@ -172,4 +172,4 @@ This is the GitHub Repo that was used by the third-party Python library. I imple
 
 - [FakeRPi GitHub Repository](https://github.com/sn4k3/FakeRPi)
 
-Used to help with developing Raspberry Pi programs on Windows.
+Used for helping with developing Raspberry Pi programs on Windows.
