@@ -20,6 +20,18 @@ then
     exit 0
 fi
 
+# Create the "data" folder if it doesn't exist.
+if ! [ -d data ]
+then
+    echo "'data' folder doesn't exist, creating now."
+    mkdir data
+    cd data
+    touch aws_access
+    touch environment
+    echo "Please fill in the 'aws_access' and 'environment' files as per the README."
+    exit 0
+fi
+
 #https://sentry.io/answers/determine-whether-a-directory-exists-in-bash/
 #If venv doesn't exist, create venv and install dependencies.
 if ! [ -d venv ]

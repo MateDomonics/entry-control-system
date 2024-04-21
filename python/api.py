@@ -4,9 +4,6 @@ import json
 from os import path
 endpoint_url = "https://fl5loc5z14.execute-api.eu-west-1.amazonaws.com/Test"
 
-"""
-Builds GET, PUT and POST requests that are sent to the API Gateway Endpoint on AWS.
-"""
 class Api:
 
     """
@@ -17,10 +14,10 @@ class Api:
     
     """
     Create a static method that reads in the API key from the "aws_access" file.
-    I made this static so that this method can be used without an initialised intance of the "User_manager" class.
+    I made this static so that this method can be used without an initialised instance of the "API" class.
     """
     @staticmethod
-    def load_access(file_path: str) -> "Api":
+    def from_file(file_path: str) -> "Api":
         if not path.exists(file_path):
             raise FileNotFoundError("Couldn't access API credentials. File not found.")
         with open(file_path, "r") as fp:
@@ -56,4 +53,3 @@ class Api:
         payload = json.dumps(payload)
         response = requests.post("/".join([endpoint_url, uuid]), payload, headers={"x-api-key":self.api_key})
         return response.status_code == 200 
-

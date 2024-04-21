@@ -21,6 +21,10 @@ class Statistic:
     
     
 class Gatherer:
+    
+    """
+    Initialize this class with an API, a list of statistics, the filepath for the statistics file and a stop event to close the loop.
+    """
     def __init__(self, api: Api, statistics: List[Statistic], filepath: str) -> None:
         self.api = api
         self.statistics = statistics
@@ -28,7 +32,7 @@ class Gatherer:
         self.stop_event = Event()
     
     """
-    Find the specified file. If it doesn't exist, create an instance of the "Gatherer" class with an empty data field.
+    Find the file "statistics". If it doesn't exist, create an instance of the "Gatherer" class with an empty data field.
     If found, read in the file contents as JSON and create an instance of the "Gatherer" class with the file's contents as its data field.
     """
     @staticmethod
@@ -50,7 +54,7 @@ class Gatherer:
     Get the list of users from the online database. If none are present, return.
     If there are users present, check whether they are inside the facility or not. If they are, increment a counter.
     Once we counted all the users who are present,
-    create an instance of the "Statistics" class where we set the current time and the number of users who are present.
+    create an instance of the "Statistics" class where we set the current time and the number of users who are present at this time.
     """
     def create_statistic(self) -> None:
         users = self.api.get_users()
@@ -66,6 +70,7 @@ class Gatherer:
                   
     """
     Every 30 minutes or on the hour, get the statistics from the facility and save them to a file.
+    Assign this loop to its own thread so it allows the rest of the program to keep running.
     """   
     def __loop(self) -> None:
         while not self.stop_event.is_set():

@@ -4,6 +4,7 @@ from api import Api
 from datetime import datetime, timedelta
 from time import mktime
 from dataclasses import dataclass, field
+from os import path
 
 @dataclass()
 class User:
@@ -15,12 +16,9 @@ class User:
     active_subscription: float
     #https://stackoverflow.com/questions/68874635/why-is-my-python-dataclass-not-initialising-boolean-correctly
     inside_facility: Optional[bool] = field(default=False)
-
-    def __str__(self) -> str:
-        return f"uuid: {self.uuid}, is inside: {self.inside_facility}"
     
     """
-    Check if the current User's subscription expiry date is larger than the current date.
+    Check if the current User's subscription expiry timestamp is larger than the current timestamp.
     If it is, they have a valid subscription, so return true. Otherwise, false.
     """
     def validate_subscription(self) -> bool:
@@ -28,17 +26,29 @@ class User:
         return self.active_subscription > current_date
 
 class User_manager:
+    
     """
-    Initalize the class with the API key that we use in the API class (refer to "api.py") and hard-code the DynamoDB table name.
+    Initalize the class with the API key that we use in the API class (refer to "api.py") and set the table name that we would like to work on.
+    This allows any user to define their own table name, meaning that we can now update multiple facilities if we wanted.
     """
-    def __init__(self, api: Api) -> None:
+    def __init__(self, api: Api, environment: str) -> None:
         self.client = api
-        self.table_name = "KapU_DB"
-
+        self.table_name = environment
+        
     """
-    CHANGE LATER
-    Generate a User from user input, including a unique user identifier, then save the user to DynamoDB.
-    Since saving the user could fail, I made sure to catch this error and either return the User or None (Union).
+    Create a static method that reads in the table name of the environment we want to work in, defined in a file called "environment".
+    """
+    @staticmethod
+    def from_file(api: Api, file_path: str) -> "User_manager":
+        if not path.exists(file_path):
+            raise FileNotFoundError("Couldn't find the correct environment. File not found.")
+        with open(file_path, "r") as fp:
+            data = fp.read(-1).split("\n")
+            return User_manager(api, data[0])
+        
+    """
+    Generate a User from user input, including a unique user identifier.
+    Choose the length of the subscription for the user and save the information to an instance of "User".
     """
     def configure_user(self) -> User:
         first_name = input("Please enter the customer's First Name: ")
@@ -50,6 +60,9 @@ class User_manager:
         while sub_length is None:
             try:
                 sub_length = int(input("Please enter the customer's subscription plan [Inputted value is considered in number of months]: "))
+                if sub_length <= 0:
+                    print("Please only input numbers that are bigger than 0.")
+                    sub_length = None
             except ValueError:
                 print("Please only input a number for the subscription length.")
 

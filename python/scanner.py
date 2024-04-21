@@ -1,4 +1,4 @@
-from typing import Any, Callable, Union
+from typing import Callable, Union
 from pn532 import PN532_I2C, MIFARE_CMD_AUTH_B, PN532Error
 import time
 #https://www.pythontutorial.net/python-concurrency/python-threading/
@@ -17,7 +17,7 @@ class Nfc:
     Construct an instance of the "Nfc" class.
     Also call the SAM_configuration() function which sets the configuration for the NFC reader.
     """
-    def __init__(self, read_callback: Callable[[int], None]) -> None:
+    def __init__(self, read_callback: Callable[[Union[bytes, None]], None]) -> None:
         # FeliCa_card_detection.py
         self.read_callback = read_callback
         self.previousId = None
@@ -98,7 +98,6 @@ class Nfc:
         if not self.authenticate_card(Nfc.DEFAULT_BLOCK_NUMBER):
             return None
         data = self.nfc.mifare_classic_read_block(block_number=Nfc.DEFAULT_BLOCK_NUMBER)
-        # print(f"Data from card: \n{[hex(i) for i in data]}")
         return data
 
     """
