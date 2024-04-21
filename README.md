@@ -56,6 +56,7 @@ The project utilizes a Raspberry Pi, along with a PN532 NFC Scanner module to sc
 3. Fill in the info for ```aws_access``` in the ```data``` folder of the project path and place your API key into it.
 4. Fill in the info for ```environment``` in the ```data``` folder of the project path and place the name of your table on DynamoDB into it **(Case- and spelling sensitive)**.
 5. Run the `start.sh` bash script with the following parameters: either ```main```  (start the NFC Reader) or ```plot``` (to plot statistics).
+
     This will check for updates on GitHub, initialise a python virtual environment, fulfill dependencies and run the program automatically.
 
 ## Developer Log
@@ -156,6 +157,7 @@ TO-DO:
 - Updated README.md
 - Moved the files ```aws_access, environment and statistics``` to the ```data``` folder to clean up the project.
 - Added flow diagram to README.md.
+- Added Lambda function to project, just to have it present on GitHub as well.
 - Merged ```statistics-gathering``` branch to ```main``` and made a new release.
 
 ## Flow Diagram
