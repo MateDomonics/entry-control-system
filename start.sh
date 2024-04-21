@@ -51,7 +51,7 @@ fi
 
 source venv/bin/activate
 
-#Update dependencies and run "main.py"
+#Update dependencies and choose which version of the app you want to run.
 pip install -r dependencies.txt --upgrade
 cd python
 if [ "$1" == "main" ]
