@@ -125,6 +125,5 @@ class Nfc:
                 print(f"Failed to authenticate card block {block_id}.", file=stderr)
                 return False
             return True
-        except PN532Error as ex:
-            print(ex.errmsg)
-            raise ex
+        except PN532Error:
+            print("Authentication failed. Card was moved during authentication.")
