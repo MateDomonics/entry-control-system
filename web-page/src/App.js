@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import './App.css';
 
 // Created using https://github.com/gitname/react-gh-pages
@@ -6,21 +5,35 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        {/* <img src={logo} className="App-logo" alt="logo" /> */}
+      <p>
         <h1>
-          Máté Domonics
+          Máté Domonics (20093156)
         </h1>
-        <h3>
+       
         BSc. (Hons) in Applied Computing (Cloud & Networks)
-        </h3>
-        <h1>KapU</h1>
+        </p>
 
-        
+        <h1>"KapU - Entry Control for U"</h1>
+
         <h2>Project Poster:</h2>
-        <h3>T.B.D</h3>
+        <a
+          className="App-link"
+          href="https://imgur.com/a/8pyZMR1"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+        <h3>Poster</h3>
+        </a>
 
         <h2>Demo Video:</h2>
-        <h3>T.B.D</h3>
+        <a
+          className="App-link"
+          href="https://www.youtube.com/watch?v=Ll1rJ5UMKAc"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+        <h3>YouTube</h3>
+        </a>
         
         <h2>Code Repository:</h2>
         <a
